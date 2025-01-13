@@ -81,8 +81,8 @@ package body Individu is
    begin
     return T_Humain'(
         Sexe           => Inconnu,
-        Date_Naissance => Creer_Date(1, 1, 0),
-        Date_Mort      => Creer_Date(1, 1, 0),
+        Date_Naissance => Creer_Date_Null,
+        Date_Mort      => Creer_Date_Null,
         Lieu_Naissance => (others => ' '),
         Lieu_Mort      => (others => ' '),
         Nom            => (others => ' '),
@@ -182,7 +182,7 @@ package body Individu is
    ---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
    
    -- Genere un individu à la racine (sans fils)
-   function creer_Individu_Source (Humain : in out T_Humain) return T_Individu is
+   function creer_Individu_Source (Humain : in T_Humain) return T_Individu is
    begin
     return T_Individu'(
         Identifiant => 1,
@@ -191,7 +191,7 @@ package body Individu is
    end creer_Individu_Source;
 
    -- Genere le pere de quelqu'un
-   function creer_Individu_Pere (Humain : in out T_Humain; idFils : in out T_Identifiant) return T_Individu is
+   function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu is
    begin
     return T_Individu'(
         Identifiant => Creer_Identifiant_Pere(idFils),
@@ -200,7 +200,7 @@ package body Individu is
    end creer_Individu_Pere;
 
    -- Genere la mere de quelqu'un
-   function creer_Individu_Mere (Humain : in out T_Humain; idFils : in out T_Identifiant) return T_Individu is
+   function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu is
    begin
     return T_Individu'(
         Identifiant => Creer_Identifiant_Mere(idFils),
@@ -231,5 +231,30 @@ package body Individu is
         Annee => Annee
     );
    end Creer_Date;
+
+   function Creer_Date_Null return T_Date is
+   begin
+    return T_Date'(
+        Jour => 0,
+        Mois => 1,
+        Annee => 0
+    );
+   end Creer_Date_Null;
+
+    function Is_Date_Null (Date : in T_Date) return Boolean is
+    begin
+        return Date.Jour <= 0;
+    end Is_Date_Null;
+
+   function To_String_Date(Date : in T_Date) return String is
+   begin
+    if (Is_Date_Null(Date)) then
+        return "";
+    else
+        return Natural'Image(Date.Jour)(2 .. Natural'Image(Date.Jour)'Last) & "/"
+     & Natural'Image(Date.Mois)(2 .. Natural'Image(Date.Mois)'Last) & "/"
+     & Natural'Image(Date.Annee)(2 .. Natural'Image(Date.Annee)'Last);
+    end if;
+   end To_String_Date;
 
 end Individu;

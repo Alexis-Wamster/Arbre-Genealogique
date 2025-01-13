@@ -9,64 +9,81 @@ package body Arbre_Binaire is
       Tree := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
    end Init;
 
+   function Get_Arbre_Vide return T_Arbre is
+   begin
+      return null;
+   end Get_Arbre_Vide;
+
    -- Procédure pour ajouter ou écraser un élément à gauche
-   procedure AddLeft (Tree : T_Arbre; Contenu : in T_Contenu) is
+   procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu) is
    begin
       Tree.Left := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
-   end AddLeft;
+   end Set_Left;
 
    -- Procédure pour ajouter ou écraser un élément à droite
-   procedure AddRight (Tree : T_Arbre; Contenu : in T_Contenu) is
+   procedure Set_Right (Tree : T_Arbre; Contenu : in T_Contenu) is
    begin
       Tree.Right := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
-   end AddRight;
+   end Set_Right;
+
+   -- Ajoute ou remplace le sous-arbre gauche avec un nouveau sous-arbre
+   procedure Set_Noeud_Left (Tree : T_Arbre; Noeud : in T_Arbre) is
+   begin
+      Tree.Left := Noeud;
+   end Set_Noeud_Left;
+
+   -- Ajoute ou remplace le sous-arbre droit avec un nouveau sous-arbre
+   procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre) is
+   begin
+      Tree.Right := Noeud;
+   end Set_Noeud_Right;
 
    -- Procédure pour supprimer le noeud de gauche
-   procedure RemoveLeft (Tree : T_Arbre) is
+   procedure Remove_Left (Tree : T_Arbre) is
    begin
       Tree.Left := null;
-   end RemoveLeft;
+   end Remove_Left;
 
    -- Procédure pour supprimer le noeud de droite
-   procedure RemoveRight (Tree : T_Arbre) is
+   procedure Remove_Right (Tree : T_Arbre) is
    begin
       Tree.Right := null;
-   end RemoveRight;
+   end Remove_Right;
 
    -- Fonction pour obtenir le noeud de gauche
-   function GetLeft (Tree : in T_Arbre) return T_Arbre is
+   function Get_Left (Tree : in T_Arbre) return T_Arbre is
    begin
       return Tree.Left;
-   end GetLeft;
+   end Get_Left;
 
    -- Fonction pour obtenir le noeud de droite
-   function GetRight (Tree : in T_Arbre) return T_Arbre is
+   function Get_Right (Tree : in T_Arbre) return T_Arbre is
    begin
       return Tree.Right;
-   end GetRight;
+   end Get_Right;
 
    -- Fonction pour obtenir le contenu d'un noeud
-   function GetContenu (Tree : in T_Arbre) return T_Contenu is
+   function Get_Contenu (Tree : in T_Arbre) return T_Contenu is
    begin
       return Tree.Contenu;
-   end GetContenu;
+   end Get_Contenu;
 
    -- Fonction qui verifie si il existe un sous-arbre droit
-   function HasRight (Tree : in T_Arbre) return Boolean is
+   function Has_Right (Tree : in T_Arbre) return Boolean is
    begin
       return Tree.Right /= null;
-   end HasRight;
+   end Has_Right;
 
    -- Fonction qui verifie si il existe un sous-arbre gauche
-   function HasLeft (Tree : in T_Arbre) return Boolean is
+   function Has_Left (Tree : in T_Arbre) return Boolean is
    begin
       return Tree.Left /= null;
-   end HasLeft;
+   end Has_Left;
 
    -- Fonction qui verifie si l'arbre est vide (est null)
-   function EstVide (Tree : in T_Arbre) return Boolean is
+   function Est_Vide (Tree : in T_Arbre) return Boolean is
    begin
       return Tree = null;
-   end EstVide;
+   end Est_Vide;
 
 end Arbre_Binaire;

@@ -1,87 +1,133 @@
 with Arbre_Binaire;
-with Individu;
+with Liste;
+with Individu;       use Individu;
+
 
 package Arbre_Genealogique is
 
-    -- Déclaration de T_Liste pour représenter une liste d'individus
-   type T_Liste is array (Natural range <>) of Individu.T_Individu;
+   package Arbre_Binaire_Individu is
+		new Arbre_Binaire (T_Contenu => T_Individu);
+	use Arbre_Binaire_Individu;
 
-   -- Redéfinition de T_Arbre_Genealogique comme un arbre binaire de T_Individu
-   type T_Arbre_Genealogique is new Arbre_Binaire.T_Arbre_Bin (Individu.T_Individu);
+   package Liste_Individu is
+		new Liste (T_Type => T_Individu, Capacite => 100);
+	use Liste_Individu;
+
+   -- Types instanciés à partir des packages
+   subtype T_Arbre_Genealogique is Arbre_Binaire_Individu.T_Arbre;
+   type T_Liste_Individu is new Liste_Individu.T_Liste with null record;
+
+   type T_Branche is (Pere, Mere, Inconnu);
+   --type T_Arbre_Genealogique is limited private;
+   --type T_Liste_Individu is limited private;
+
 
    -- Création de l'arbre généalogique avec un humain initial
-   procedure CreerArbre (
+   procedure Creer_Arbre (
       Arbre : in out T_Arbre_Genealogique;
-      Humain : in Individu.T_Humain
+      Humain : in T_Humain
    );
-   -- Precondition : Arbre = null
-   -- Postcondition : Arbre contient un noeud racine avec l'humain fourni
 
    -- Ajout du père d'un individu identifié
-   procedure AddPere (
+   procedure Add_Pere (
       Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant;
-      Humain      : in Individu.T_Humain
+      Identifiant : in T_Identifiant;
+      Humain      : in T_Humain
    );
-   -- Precondition : Identifiant existe dans l'arbre et le noeud père est vide
-   -- Postcondition : Le père est ajouté comme sous-arbre gauche du noeud cible
 
    -- Ajout de la mère d'un individu identifié
-   procedure AddMere (
+   procedure Add_Mere (
       Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant;
-      Humain      : in Individu.T_Humain
+      Identifiant : in T_Identifiant;
+      Humain      : in T_Humain
    );
-   -- Precondition : Identifiant existe dans l'arbre et le noeud mère est vide
-   -- Postcondition : La mère est ajoutée comme sous-arbre droit du noeud cible
 
    -- Affichage de l'arbre généalogique
-   procedure PrintArbre (
+   procedure Print_Arbre (
       Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant
+      Identifiant : in T_Identifiant
    );
-   -- Precondition : Identifiant existe dans l'arbre
-   -- Postcondition : L'arbre est affiché à partir du noeud identifié
 
    -- Suppression d'un individu et de son sous-arbre
    procedure Delete (
       Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant
+      Identifiant : in T_Identifiant
    );
-   -- Precondition : Identifiant existe dans l'arbre
-   -- Postcondition : Le noeud et son sous-arbre sont supprimés
 
    -- Calcul du nombre d'ancêtres d'un individu
-   function GetNbAncetre (
+   function Get_Nb_Ancetre (
       Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant
+      Identifiant : in T_Identifiant
    ) return Natural;
-   -- Precondition : Identifiant existe dans l'arbre
-   -- Postcondition : Retourne le nombre d'ancêtres connus de l'individu
 
    -- Récupération des individus d'une génération donnée
-   function GetGen (
+   function Get_Gen (
       Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant;
-      EquartGen   : in Integer
-   ) return T_Liste;
-   -- Precondition : Identifiant existe dans l'arbre et EquartGen >= 0
-   -- Postcondition : Retourne une liste d'individus de la génération correspondante
+      Identifiant : in T_Identifiant;
+      Equart_Gen   : in Integer
+   ) return T_Liste_Individu;
 
    -- Récupération des individus selon un nombre de parents connus
-   function GetGroupe (
+   function Get_Groupe (
       Arbre          : in T_Arbre_Genealogique;
-      NbParentConnu  : in Natural
-   ) return T_Liste;
-   -- Precondition : Arbre non vide
-   -- Postcondition : Retourne une liste d'individus avec exactement NbParentConnu parents connus
+      Nb_Parent_Connu  : in Natural
+   ) return T_Liste_Individu;
 
    -- Récupération d'un noeud par identifiant
-   function GetNoeud (
+   function Get_Noeud (
       Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in Individu.T_Identifiant
-   ) return Individu.T_Individu;
-   -- Precondition : Identifiant existe dans l'arbre
-   -- Postcondition : Retourne le noeud correspondant à l'identifiant
+      Identifiant : in T_Identifiant
+   ) return T_Arbre_Genealogique;
+
+   -- Récupération d'un des parent d'un noeud
+   function Get_Parent (
+      Arbre       : in T_Arbre_Genealogique;
+      Parent : in T_Branche
+   ) return T_Arbre_Genealogique;
+
+   -- Récupération des caracteristiques humaines d'un noeud
+   function Get_Humain_Noeud (
+      Arbre       : in T_Arbre_Genealogique
+   ) return T_Humain;
+
+   -- Récupération de l'identifiant d'un noeud
+   function Get_Identifiant_Noeud (
+      Arbre       : in T_Arbre_Genealogique
+   ) return T_Identifiant;
+
+   private
+
+   procedure Print_Arbre_Recursif(
+      Arbre      : in T_Arbre_Genealogique;
+      Equart_Gen : in Natural
+   );
+
+   procedure Afficher_Humain(N : Natural; Humain : T_Humain);
+
+   procedure Set_Parent (
+      Arbre       : in out T_Arbre_Genealogique;
+      Parent : in T_Branche;
+      Valeur       : in out T_Arbre_Genealogique
+   );
+
+   procedure Remove_Parent (
+      Arbre       : in out T_Arbre_Genealogique;
+      Parent : in T_Branche
+   );
+
+   function Get_Nb_Ancetre_Recursive (
+      Arbre       : in T_Arbre_Genealogique
+   ) return Natural;
+
+   procedure Get_Gen_Recursive (
+      Resultat : in out T_Liste_Individu;
+      Arbre       : in T_Arbre_Genealogique;
+      Equart_Gen   : in Integer
+   ) ;
+
+   function Get_Nb_Parent (
+      Arbre       : in T_Arbre_Genealogique
+   ) return Natural;
+
 
 end Arbre_Genealogique;

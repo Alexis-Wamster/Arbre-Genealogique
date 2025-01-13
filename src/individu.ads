@@ -80,13 +80,13 @@ package Individu is
 
    
    -- Genere un individu à la racine (sans fils)
-   function creer_Individu_Source (Humain : in out T_Humain) return T_Individu;
+   function creer_Individu_Source (Humain : in T_Humain) return T_Individu;
 
    -- Genere le pere de quelqu'un
-   function creer_Individu_Pere (Humain : in out T_Humain; idFils : in out T_Identifiant) return T_Individu;
+   function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
 
    -- Genere la mere de quelqu'un
-   function creer_Individu_Mere (Humain : in out T_Humain; idFils : in out T_Identifiant) return T_Individu;
+   function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
 
    -- Renvoie l'identifiant d'un individu
    function Get_Identifiant (Individu : in T_Individu) return T_Identifiant;
@@ -106,6 +106,12 @@ package Individu is
    ((Mois = 4 OR Mois = 6 OR Mois = 9 OR Mois = 11) AND Jour <= 30) OR
    ((Mois = 1 OR Mois = 3 OR Mois = 5 OR Mois = 7 OR Mois = 8 OR Mois = 10 OR Mois = 12) AND Jour <= 31);
 
+   function To_String_Date(Date : in T_Date) return String;
+   
+   function Creer_Date_Null return T_Date;
+
+   function Is_Date_Null (Date : in T_Date) return Boolean;
+
 
    ---------------------------------------------- DEFINITION TYPE -------------------------------------------
 
@@ -121,8 +127,8 @@ package Individu is
    -- Définition du type T_Humain
    type T_Humain is record
       Sexe           : T_Sexe := Inconnu;
-      Date_Naissance : T_Date := Creer_Date(1, 1, 0);
-      Date_Mort      : T_Date := Creer_Date(1, 1, 0);
+      Date_Naissance : T_Date := Creer_Date(0, 1, 0);
+      Date_Mort      : T_Date := Creer_Date(0, 1, 0);
       Lieu_Naissance : String(1..100) := (others => ' ');
       Lieu_Mort      : String(1..100) := (others => ' ');
       Nom            : String(1..30) := (others => ' ');
