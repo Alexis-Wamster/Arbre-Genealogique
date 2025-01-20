@@ -37,13 +37,6 @@ procedure Main_Arbre_Genealogique is
         return Valeur_Erreur;
     end String_To_Natural;
 
-    -- Demmande et retourne l'identifiant saisie par l'utilisateur
-    function Demmander_Identifiant(Texte : in String) return Natural is
-    begin
-        Put("Veuillez saisir l'identifiant " & Texte);
-        return String_To_Natural(Get_Line, 0);
-    end Demmander_Identifiant;
-
     -- modifie une personne selon les saisies de l'utilisateur
     procedure Demmander_Personne(Humain : in out T_Humain) is
         Ligne : Unbounded_String; 
@@ -54,103 +47,96 @@ procedure Main_Arbre_Genealogique is
 
         Put("Sexe [1:Homme / 2:Femme]: ");
         case String_To_Natural(Get_Line, 0) is
-            when 1 => Ajouter_Sexe(Humain, Homme);
-            when 2 => Ajouter_Sexe(Humain, Femme);
+            when 1 => Set_Sexe(Humain, Homme);
+            when 2 => Set_Sexe(Humain, Femme);
             when others => null;
         end case;
 
         Put("Nom: ");
         Ligne := To_Unbounded_String(Get_Line);
         if (To_String(Ligne) /= "") then
-            Ajouter_Nom(Humain, To_String(Ligne));
+            Set_Nom(Humain, To_String(Ligne));
         end if;
 
         Put("Prenom: ");
         Ligne := To_Unbounded_String(Get_Line); 
         if (To_String(Ligne) /= "") then
-            Ajouter_Prenom(Humain, To_String(Ligne));
+            Set_Prenom(Humain, To_String(Ligne));
         end if;
 
         Put("Date de naissance (jj/mm/aaaa): ");
         Ligne := To_Unbounded_String(Get_Line);
         Date_Naissance := Create_Date_From_Text(To_String(Ligne));
         if (Is_Date_Null(Date_Naissance) = False) then
-            Ajouter_Date_Naissance(Humain, Date_Naissance);
+            Set_Date_Naissance(Humain, Date_Naissance);
         end if;
 
         Put("Lieu de naissance: ");
         Ligne := To_Unbounded_String(Get_Line);
         if (To_String(Ligne) /= "") then
-            Ajouter_Lieu_Naissance(Humain, To_String(Ligne));
+            Set_Lieu_Naissance(Humain, To_String(Ligne));
         end if;
 
         Put("Date de mort (jj/mm/aaaa): ");
         Ligne := To_Unbounded_String(Get_Line);
         Date_Mort := Create_Date_From_Text(To_String(Ligne));
         if (Is_Date_Null(Date_Mort) = False) then
-            Ajouter_Date_Mort(Humain, Date_Mort);
+            Set_Date_Mort(Humain, Date_Mort);
         end if;
 
         Put("Lieu de mort: "); 
         Ligne := To_Unbounded_String(Get_Line);
         if (To_String(Ligne) /= "") then
-            Ajouter_Lieu_Mort(Humain, To_String(Ligne));
+            Set_Lieu_Mort(Humain, To_String(Ligne));
         end if;
     end Demmander_Personne;
 
     -- verifie si un arbre est vide, demmande un identifiant à l'utilisateur, verifie si l'identifiant est valide
-    function Verifier_Erreur_Identifiant_Arbre(Arbre : in T_Arbre_Genealogique; Identifiant : in out T_Identifiant) return Boolean is
+    function Demmander_Identifiant(Arbre : in T_Arbre_Genealogique; Identifiant : out T_Identifiant) return T_Arbre_Genealogique is
     begin
-        if (Est_Vide_Arbre_Genealogique(Arbre)) then
-            Put_Line("Opération Impossible ! L'arbre est vide !");
-            return False;
-        end if;
-        Identifiant := Demmander_Identifiant(" : ");
-        if (Est_Identifiant_Dans_Arbre(Arbre, Identifiant)) then
-            return True;
-        end if;
-        Put_Line("L'identifiant n'a pas été trouvé ! Opération annulé");
-        return False;
-    end Verifier_Erreur_Identifiant_Arbre;
+        Put("Veuillez saisir l'identifiant : ");
+        Identifiant :=  String_To_Natural(Get_Line, 0);
+        return Get_Noeud(Arbre, Identifiant);
+    end Demmander_Identifiant;
 
 
     --------------------------------------------------- OPERATION DE L'INTERFACE ---------------------------------------------
 
     -- supprime une personne et ses ancetres
-    procedure Supprimer(Arbre : in out T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Supprimer(Racine : in out T_Arbre_Genealogique; Noeud : in out T_Arbre_Genealogique) is
     begin
-        Delete(Arbre, Identifiant);
+        Delete(Racine, Noeud);
     end Supprimer;
 
     -- modifie une personne de l'arbre
-    procedure Modifier(Arbre : in out T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Modifier(Arbre : in out T_Arbre_Genealogique) is
         Humain : T_Humain;
-        Noeud : T_Arbre_Genealogique;
     begin
-        Noeud := Get_Noeud(Arbre, Identifiant);
-        Humain := Get_Humain_Noeud(Noeud);
+        Humain := Get_Humain_Noeud(Arbre);
         Demmander_Personne(Humain);
         Set_Humain_Noeud(Arbre, Humain);
     end Modifier;
 
     -- affiche l'arbre
-    procedure Afficher(Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Afficher(Arbre : in T_Arbre_Genealogique) is
     begin
-        Print_Arbre(Arbre, Identifiant); 
+        Print_Arbre(Arbre, Inconnu, 0);
     end Afficher;
 
     -- Ajoute un Humain dans l'arbre
-    procedure Ajouter(Arbre : in out T_Arbre_Genealogique) is
-        Identifiant: Natural;
+    procedure Ajouter(Racine : in out T_Arbre_Genealogique) is
+        Identifiant_Fils: Natural;
+        Noeud_Fils : T_Arbre_Genealogique;
         Identifiant_Creer : Natural;
         Humain : T_Humain;
         Arbre_Vide : Boolean;
         Branche : T_Branche := Inconnu;
     begin
-        Arbre_Vide := Est_Vide_Arbre_Genealogique(Arbre);
+        Arbre_Vide := Est_Vide_Arbre_Genealogique(Racine);
+
         if (Arbre_Vide = False) then
-            Identifiant := Demmander_Identifiant("du fils de la personne à ajouter : ");
-            if (Est_Identifiant_Dans_Arbre(Arbre, Identifiant) = False) then
+            Noeud_Fils := Demmander_Identifiant(Racine, Identifiant_Fils);
+            if (Est_Vide_Arbre_Genealogique(Noeud_Fils)) then
                 Put_Line("L'identifiant n'a pas été trouvé ! Opération annulé");
                 return;
             end if;
@@ -164,38 +150,30 @@ procedure Main_Arbre_Genealogique is
                 end case;
             end loop;
         end if;
+
         Humain := creer_Humain_Vide;
         Demmander_Personne(Humain);
 
         if (Arbre_Vide) then
-            Creer_Arbre(Arbre, Humain);
-            Identifiant_Creer := Get_Identifiant_Noeud(Arbre);
+            Creer_Arbre(Racine, Humain);
+            Identifiant_Creer := Get_Identifiant_Noeud(Racine);
         else
-            case Branche is
-                when Pere =>
-                    Add_Pere(Arbre, Identifiant, Humain);
-                    Identifiant_Creer := Get_Identifiant_Noeud(Get_Parent(Get_Noeud(Arbre, Identifiant), Pere));
-                when Mere =>
-                    Add_Mere(Arbre, Identifiant, Humain);
-                    Identifiant_Creer := Get_Identifiant_Noeud(Get_Parent(Get_Noeud(Arbre, Identifiant), Mere));
-                when others =>
-                    null;
-            end case;
+            Add_Parent(Noeud_Fils, Humain, Branche);
+            Identifiant_Creer := Get_Identifiant_Noeud(Get_Parent(Noeud_Fils, Branche));
         end if;
         Put_Line("La personne à été ajouté avec succès avec l'identifiant :"& Identifiant_Creer'Image);
     end Ajouter;
 
-    procedure Nb_Ancetres_Connu(Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Nb_Ancetres_Connu(Arbre : in T_Arbre_Genealogique) is
         Nb_Ancetres : Natural;
     begin
-        Nb_Ancetres := Get_Nb_Ancetre(Arbre, Identifiant);
-        Put_Line("'" & Identifiant'Image & "' à " & Nb_Ancetres'Image & " ancteres connus (lui inclus)");
+        Nb_Ancetres := Get_Nb_Ancetre(Arbre);
+        Put_Line(To_String_Humain(Get_Humain_Noeud(Arbre)) & "' à " & Nb_Ancetres'Image & " ancteres connus (lui inclus)");
     end Nb_Ancetres_Connu;
 
-    procedure Ancetres_Parents_Connu(Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Ancetres_Parents_Connu(Arbre : in T_Arbre_Genealogique) is
         Liste : T_Liste_Individu;
         Nb_Parent_Connu : Natural := 3;
-        Noeud_Source : T_Arbre_Genealogique;
     begin
         Put("Saisissez le nombre de parents connus que doivent avoir les ancetres : ");
         loop
@@ -203,13 +181,12 @@ procedure Main_Arbre_Genealogique is
             exit when (Nb_Parent_Connu <= 2 AND Nb_Parent_Connu >= 0);
             Put("Veuillez saisir un nombre entre 0 et 2 : ");
         end loop;
-        Noeud_Source := Get_Noeud(Arbre, Identifiant);
-        Liste := Get_Groupe (Noeud_Source, Nb_Parent_Connu);
+        Liste := Get_Groupe (Arbre, Nb_Parent_Connu);
         Put_Line("Voici ci-dessous, la liste des personnes correspondantes:");
         Print_Liste_Individu(Liste);
     end Ancetres_Parents_Connu;
 
-    procedure Ancetres_Separes_Generation(Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) is
+    procedure Ancetres_Separes_Generation(Arbre : in T_Arbre_Genealogique) is
         Liste : T_Liste_Individu;
         Equart_Generation : Natural;
     begin
@@ -219,7 +196,7 @@ procedure Main_Arbre_Genealogique is
             exit when (Equart_Generation > 0);
             Put_Line("Veuillez saisir un nombre superieur à 0 : ");
         end loop;
-        Liste := Get_Gen (Arbre, Identifiant, Equart_Generation);
+        Get_Gen (Liste, Arbre, Equart_Generation);
         Put_Line("Voici ci-dessous, la liste des personnes correspondantes:");
         Print_Liste_Individu(Liste);
     end Ancetres_Separes_Generation;
@@ -232,6 +209,7 @@ procedure Main_Arbre_Genealogique is
         Num_Action : Natural;
         Action_Max : Natural := 8;
         Identifiant : T_Identifiant;
+        Noeud : T_Arbre_Genealogique;
     begin
         Num_Action := String_To_Natural(Get_Line, Action_Max+1);
         if (Num_Action > Action_Max) then
@@ -243,14 +221,21 @@ procedure Main_Arbre_Genealogique is
             Ajouter(Arbre);
         else
             Put_Line("----------------------------------------");
-            if Verifier_Erreur_Identifiant_Arbre(Arbre, Identifiant) then
+            if (Est_Vide_Arbre_Genealogique(Arbre)) then
+                Put_Line("Opération Impossible ! L'arbre est vide !");
+                return True;
+            end if;
+            Noeud := Demmander_Identifiant(Arbre, Identifiant);
+            if (Est_Vide_Arbre_Genealogique(Noeud)) then
+                Put_Line("L'identifiant n'a pas été trouvé ! Opération annulé");
+            else
                 case Num_Action is
-                    when 2 => Supprimer(Arbre, Identifiant);
-                    when 3 => Modifier(Arbre, Identifiant);
-                    when 4 => Afficher(Arbre, Identifiant);
-                    when 5 => Nb_Ancetres_Connu(Arbre, Identifiant);
-                    when 6 => Ancetres_Parents_Connu(Arbre, Identifiant);
-                    when 7 => Ancetres_Separes_Generation(Arbre, Identifiant);
+                    when 2 => Supprimer(Arbre, Noeud);
+                    when 3 => Modifier(Noeud);
+                    when 4 => Afficher(Noeud);
+                    when 5 => Nb_Ancetres_Connu(Noeud);
+                    when 6 => Ancetres_Parents_Connu(Noeud);
+                    when 7 => Ancetres_Separes_Generation(Noeud);
                     when others => null;
                 end case;
             end if;

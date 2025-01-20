@@ -7,7 +7,7 @@ package body Individu is
     ---------------------------------------------OPERATION STRING-------------------------------------------
 
     -- Fonction pour extraire une sous-chaîne en tant que Natural
-   function Substring_To_Natural(Texte : String; Start_Index, End_Index : Positive) return Natural is
+   function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural is
         Substring_Value : String := Texte(Start_Index .. End_Index);
         Converted_Value : Natural;
     begin
@@ -19,7 +19,7 @@ package body Individu is
    end Substring_To_Natural;
 
     -- Trouve la position d'un caractere dans une chaine
-   function Find(Texte : String; Char : Character) return Natural is
+   function Find(Texte : in String; Char : in Character) return Natural is
    begin
         for I in Texte'Range loop
             if (Texte(I) = Char) then
@@ -32,46 +32,46 @@ package body Individu is
     ---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
 
    -- Ajoute ou modifie l'attribut sexe d'un humain
-   procedure Ajouter_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe) is
+   procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe) is
    begin
     Humain.Sexe := Sexe;
-   end Ajouter_Sexe;
+   end Set_Sexe;
 
    -- Ajoute ou modifie le nom d'un humain
-   procedure Ajouter_Nom(Humain : in out T_Humain; Nom : in String) is
+   procedure Set_Nom(Humain : in out T_Humain; Nom : in String) is
    begin
     Humain.Nom := To_Unbounded_String(Nom);
-   end Ajouter_Nom;
+   end Set_Nom;
 
    -- Ajoute ou modifie le prenom d'un humain
-   procedure Ajouter_Prenom(Humain : in out T_Humain; Prenom : in String) is
+   procedure Set_Prenom(Humain : in out T_Humain; Prenom : in String) is
    begin
     Humain.Prenom := To_Unbounded_String(Prenom);
-   end Ajouter_Prenom;
+   end Set_Prenom;
 
    -- Ajoute ou modifie la date de naissance d'un humain
-   procedure Ajouter_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date) is
+   procedure Set_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date) is
    begin
     Humain.Date_Naissance := Date_Naissance;
-   end Ajouter_Date_Naissance;
+   end Set_Date_Naissance;
 
    -- Ajoute ou modifie la date de décès d'un humain
-   procedure Ajouter_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date) is
+   procedure Set_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date) is
    begin
     Humain.Date_Mort := Date_Mort;
-   end Ajouter_Date_Mort;
+   end Set_Date_Mort;
 
    -- Ajoute ou modifie le lieu de naissance d'un humain
-   procedure Ajouter_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String) is
+   procedure Set_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String) is
    begin
     Humain.Lieu_Naissance := To_Unbounded_String(Lieu_Naissance);
-   end Ajouter_Lieu_Naissance;
+   end Set_Lieu_Naissance;
 
    -- Ajoute ou modifie le lieu de décès d'un humain
-   procedure Ajouter_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String) is
+   procedure Set_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String) is
    begin
     Humain.Lieu_Mort := To_Unbounded_String(Lieu_Mort);
-   end Ajouter_Lieu_Mort;
+   end Set_Lieu_Mort;
 
    -- Creer un humain sans caracteristiques
    function creer_Humain_Vide return T_Humain is
@@ -92,9 +92,9 @@ package body Individu is
     Resultat : T_Humain;
    begin
     Resultat := creer_Humain_Vide;
-    Ajouter_Sexe(Resultat, Sexe);
-    Ajouter_Nom(Resultat, Nom);
-    Ajouter_Prenom(Resultat, Prenom);
+    Set_Sexe(Resultat, Sexe);
+    Set_Nom(Resultat, Nom);
+    Set_Prenom(Resultat, Prenom);
     return Resultat;
    end creer_Humain_Default;
 
@@ -103,8 +103,8 @@ package body Individu is
     Resultat : T_Humain;
    begin
     Resultat := creer_Humain_Default(Nom, Prenom, Sexe);
-    Ajouter_Date_Naissance(Resultat, Date_Naissance);
-    Ajouter_Lieu_Naissance(Resultat, Lieu_Naissance);
+    Set_Date_Naissance(Resultat, Date_Naissance);
+    Set_Lieu_Naissance(Resultat, Lieu_Naissance);
     return Resultat;
    end creer_Humain_Vivant;
 
@@ -113,8 +113,8 @@ package body Individu is
     Resultat : T_Humain;
    begin
     Resultat := creer_Humain_Vivant(Nom, Prenom, Sexe, Date_Naissance, Lieu_Naissance);
-    Ajouter_Date_Mort(Resultat, Date_Mort);
-    Ajouter_Lieu_Mort(Resultat, Lieu_Mort);
+    Set_Date_Mort(Resultat, Date_Mort);
+    Set_Lieu_Mort(Resultat, Lieu_Mort);
     return Resultat;
    end creer_Humain_Complet;
 

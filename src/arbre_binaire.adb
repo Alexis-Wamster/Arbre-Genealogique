@@ -3,16 +3,15 @@ with Ada.Integer_Text_IO;         use Ada.Integer_Text_IO;
 
 package body Arbre_Binaire is
 
-   -- Procédure pour initialiser un noeud avec un contenu
+------------------------------------------------ INIT -------------------------------------------------
+
+   -- Initialise un noeud avec un contenu
    procedure Init (Tree : out T_Arbre; Contenu : in T_Contenu) is
    begin
       Tree := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
    end Init;
 
-   function Get_Arbre_Vide return T_Arbre is
-   begin
-      return null;
-   end Get_Arbre_Vide;
+------------------------------------------------ SET -------------------------------------------------
 
    -- Procédure pour ajouter ou écraser un élément à gauche
    procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu) is
@@ -38,6 +37,12 @@ package body Arbre_Binaire is
       Tree.Right := Noeud;
    end Set_Noeud_Right;
 
+   -- Ajoute ou remplace le le contenu d'un noeud
+   procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu) is
+   begin
+      Tree.Contenu := Contenu;
+   end Set_Contenu;
+
    -- Procédure pour supprimer le noeud de gauche
    procedure Remove_Left (Tree : T_Arbre) is
    begin
@@ -50,11 +55,14 @@ package body Arbre_Binaire is
       Tree.Right := null;
    end Remove_Right;
 
-   procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu) is
-   begin
-      Tree.Contenu := Contenu;
-   end Set_Contenu;
+------------------------------------------------ GET -------------------------------------------------
 
+   -- Renvoie un Arbre_Vide (null)
+   function Get_Arbre_Vide return T_Arbre is
+   begin
+      return null;
+   end Get_Arbre_Vide;
+   
    -- Fonction pour obtenir le noeud de gauche
    function Get_Left (Tree : in T_Arbre) return T_Arbre is
    begin
@@ -72,6 +80,8 @@ package body Arbre_Binaire is
    begin
       return Tree.Contenu;
    end Get_Contenu;
+
+------------------------------------------------ BOOLEAN -------------------------------------------------
 
    -- Fonction qui verifie si il existe un sous-arbre droit
    function Has_Right (Tree : in T_Arbre) return Boolean is

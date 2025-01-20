@@ -2,14 +2,14 @@ generic
    type T_Contenu is private;
 package Arbre_Binaire is
 
-   --type T_Noeud is private;
-   --type T_Arbre is access T_Noeud;
    type T_Arbre is private;
+
+   ------------------------------------------------ INIT -------------------------------------------------
 
    -- Initialise un noeud avec un contenu
    procedure Init (Tree : out T_Arbre; Contenu : in T_Contenu);
 
-   function Get_Arbre_Vide return T_Arbre;
+   ------------------------------------------------ SET -------------------------------------------------
 
    -- Ajoute ou remplace le sous-arbre gauche avec un contenu
    procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu) with
@@ -27,16 +27,18 @@ package Arbre_Binaire is
    procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre) with
       pre => Est_Vide_Arbre(Tree);
 
-   -- Supprime le sous-arbre gauche
+   -- Ajoute ou remplace le le contenu d'un noeud
+   procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu);
+
+   -- Supprime le sous-arbre gauche (:= null)
    procedure Remove_Left (Tree : T_Arbre) with
       pre => Est_Vide_Arbre(Tree);
 
-   -- Supprime le sous-arbre droit
+   -- Supprime le sous-arbre droit (:= null)
    procedure Remove_Right (Tree : T_Arbre) with
       pre => Est_Vide_Arbre(Tree);
 
-   -- Renvoie le contenu d'un noeud
-   procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu);
+   ------------------------------------------------ GET -------------------------------------------------
 
    -- Retourne le sous-arbre gauche
    function Get_Left (Tree : in T_Arbre) return T_Arbre with
@@ -50,6 +52,11 @@ package Arbre_Binaire is
    function Get_Contenu (Tree : in T_Arbre) return T_Contenu with
       pre => Est_Vide_Arbre(Tree);
 
+   -- Renvoie un Arbre_Vide (null)
+   function Get_Arbre_Vide return T_Arbre;
+
+   ------------------------------------------------ BOOLEAN -------------------------------------------------
+
    -- Verifie si il existe un sous-arbre droit
    function Has_Right (Tree : in T_Arbre) return Boolean with
       pre => Est_Vide_Arbre(Tree);
@@ -62,6 +69,8 @@ package Arbre_Binaire is
    function Est_Vide_Arbre (Tree : in T_Arbre) return Boolean;
 
    private
+
+   ------------------------------------------------ TYPE -------------------------------------------------
 
       type T_Noeud;
       type T_Arbre is access T_Noeud;

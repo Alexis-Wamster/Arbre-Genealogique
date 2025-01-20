@@ -1,29 +1,10 @@
-with Arbre_Binaire;
-with Liste;
-with Individu;       use Individu;
-
-
-package Arbre_Genealogique is
-
-   -- Types instanciés à partir des packages
-   type T_Liste_Individu is private;
-   type T_Arbre_Genealogique is private;
-
-   type T_Branche is (Pere, Mere, Inconnu);
-
 ------------------------------------------------------- SET ---------------------------------------------------
 
    -- Création de l'arbre généalogique avec un humain initial
-   procedure Creer_Arbre (
-      Arbre : in out T_Arbre_Genealogique;
-      Humain : in T_Humain
-   );
+   procedure Creer_Arbre (Arbre : in out T_Arbre_Genealogique; Humain : in T_Humain);
 
    -- Ajout d'un parent à un individu identifié
-   procedure Add_Parent (
-      Fils       : in out T_Arbre_Genealogique;
-      Humain      : in T_Humain;
-      Branche : in T_Branche
+   procedure Add_Parent (Fils       : in out T_Arbre_Genealogique; Humain      : in T_Humain; Branche : in T_Branche
    );
 
    -- Suppression d'un individu et de son sous-arbre

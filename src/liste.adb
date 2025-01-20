@@ -1,7 +1,7 @@
 package body Liste is
 
    -- Initialiser une liste
-   procedure Initialiser(Liste : in out T_Liste) is
+   procedure Initialiser(Liste : out T_Liste) is
    begin
       Liste.Taille := 0;
    end Initialiser;
@@ -14,7 +14,7 @@ package body Liste is
    end Ajouter;
 
    -- Supprimer le dernier élément de la liste
-   procedure Supprimer(Liste : in out T_Liste; Index : Natural) is
+   procedure Supprimer(Liste : in out T_Liste; Index : in Natural) is
    begin
         for I in Index..(Liste.Taille-1) loop
             Liste.Contenu(I) := Liste.Contenu(I+1);
@@ -23,13 +23,13 @@ package body Liste is
    end Supprimer;
 
     -- Modifie un élément à la liste
-   procedure Modifier(Liste : in out T_Liste; Element : in T_Type; Index : Natural) is
+   procedure Modifier(Liste : in out T_Liste; Element : in T_Type; Index : in Natural) is
    begin
         Liste.Contenu(Index) := Element;
    end Modifier;
 
    -- Insere un élément à la liste
-   procedure Inserer(Liste : in out T_Liste; Element : in T_Type; Index : Natural) is
+   procedure Inserer(Liste : in out T_Liste; Element : in T_Type; Index : in Natural) is
    begin
         Liste.Taille := Liste.Taille + 1;
         for I in reverse (Index+1)..Liste.Taille loop
@@ -52,25 +52,25 @@ package body Liste is
    end Concatener;
 
    -- Obtenir un élément de la liste par index
-   function Obtenir(Liste : T_Liste; Index : Natural) return T_Type is
+   function Obtenir(Liste : T_Liste; Index : in Natural) return T_Type is
    begin
         return Liste.Contenu(Index);
    end Obtenir;
 
    -- Vérifier si la liste est pleine
-   function Est_Pleine(Liste : T_Liste) return Boolean is
+   function Est_Pleine(Liste : in T_Liste) return Boolean is
    begin
       return Liste.Taille = Capacite;
    end Est_Pleine;
 
    -- Vérifier si la liste est vide
-   function Est_Vide(Liste : T_Liste) return Boolean is
+   function Est_Vide(Liste : in T_Liste) return Boolean is
    begin
       return Liste.Taille = 0;
    end Est_Vide;
 
    -- Renvoie le nombre d'élements de la liste
-   function Taille(Liste : T_Liste) return Natural is
+   function Taille(Liste : in T_Liste) return Natural is
    begin
           return Liste.Taille;
    end Taille;

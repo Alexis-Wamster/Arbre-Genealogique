@@ -6,6 +6,8 @@ with Individu;       use Individu;
 
 package body Arbre_Genealogique is
 
+------------------------------------------------------- SET ---------------------------------------------------
+
    -- Création de l'arbre généalogique avec un humain initial
    procedure Creer_Arbre (
       Arbre : in out T_Arbre_Genealogique;
@@ -16,134 +18,115 @@ package body Arbre_Genealogique is
    end Creer_Arbre;
 
    -- Ajout du père d'un individu identifié
-   procedure Add_Pere (
-      Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant;
-      Humain      : in T_Humain
+   procedure Add_Parent (
+      Fils       : in out T_Arbre_Genealogique;
+      Humain      : in T_Humain;
+      Branche : in T_Branche
    ) is
-      Fils : T_Arbre_Genealogique;
-      Noeud_Pere : T_Arbre_Genealogique;
+      Identifiant_Fils : T_Identifiant;
+      Noeud_Parent : T_Arbre_Genealogique;
    begin
-      Fils := Get_Noeud(Arbre, Identifiant);
+      Identifiant_Fils := Get_Identifiant_Noeud(Fils);
       if Est_Vide_Arbre(Fils) = False then
-         Init(Noeud_Pere, creer_Individu_Pere(Humain, Identifiant));
-         Set_Parent(Fils, Pere, Noeud_Pere);
+         case Branche is
+            when Pere =>
+               Init(Noeud_Parent, creer_Individu_Pere(Humain, Identifiant_Fils));
+               Set_Parent(Fils, Pere, Noeud_Parent);
+            when Mere =>
+               Init(Noeud_Parent, creer_Individu_Mere(Humain, Identifiant_Fils));
+               Set_Parent(Fils, Mere, Noeud_Parent);
+            when others =>
+               null;
+         end case;
       end if;
-   end Add_Pere;
-
-   -- Ajout de la mère d'un individu identifié
-   procedure Add_Mere (
-      Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant;
-      Humain      : in T_Humain
-   ) is
-      Fils : T_Arbre_Genealogique;
-      Noeud_Mere : T_Arbre_Genealogique;
-   begin
-      Fils := Get_Noeud(Arbre, Identifiant);
-      if Est_Vide_Arbre(Fils) = False then
-         Init(Noeud_Mere, creer_Individu_Mere(Humain, Identifiant));
-         Set_Parent(Fils, Mere, Noeud_Mere);
-      end if;
-   end Add_Mere;
-
-   -- Affichage de l'arbre généalogique
-   procedure Print_Arbre (
-      Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant
-   ) is
-      Noeud_Source : T_Arbre_Genealogique;
-   begin
-      Noeud_Source := Get_Noeud(Arbre, Identifiant);
-      Print_Arbre_Recursif(Noeud_Source, Inconnu, 0);
-   end Print_Arbre;
-
-   -- Affichage de l'arbre généalogique
-   procedure Print_Arbre_Recursif(
-      Arbre      : in T_Arbre_Genealogique;
-      Parent : in T_Branche;
-      Equart_Gen : in Natural
-   ) is
-   begin
-      if Est_Vide_Arbre(Arbre) = False then
-         Afficher_Noeud(Equart_Gen, Parent, Get_Contenu(Arbre));
-         Print_Arbre_Recursif(Get_Parent(Arbre, Pere), Pere, Equart_Gen + 1);
-         Print_Arbre_Recursif(Get_Parent(Arbre, Mere), Mere, Equart_Gen + 1);
-      end if;
-   end Print_Arbre_Recursif;
-
-   -- Affiche N espaces, suivi de \"---\", le prénom, le nom et le sexe.
-   procedure Afficher_Noeud(N : Natural; Parent : T_Branche; Individu : T_Individu) is
-   begin
-      Put(Item => (1 .. N*12 => ' '));
-      Put("\--- ");
-      if (Parent /= Inconnu) then
-         Put(Parent'Image);
-         Put(" :");
-      end if;
-      Put_Line(To_String_Individu(Individu));
-   end Afficher_Noeud;
+   end Add_Parent;
 
    -- Suppression d'un individu et de son sous-arbre
    procedure Delete (
-      Arbre       : in out T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant
+      Racine: in out T_Arbre_Genealogique;
+      Parent       : in out T_Arbre_Genealogique
    ) is
+      Identifiant : T_Identifiant;
       Fils : T_Arbre_Genealogique;
+      Test : Natural;
    begin
+      Identifiant := Get_Identifiant_Noeud(Parent);
+      Test := Identifiant mod 2;
       if (Identifiant mod 2 = 0) then
-         Fils := Get_Noeud(Arbre, Identifiant/2);
+         Fils := Get_Noeud(Racine, Identifiant/2);
+         Put_Line(Est_Vide_Arbre(Fils)'Image);
+         Put_Line(To_String_Humain(Get_Humain_Noeud(Fils)));
          if Est_Vide_Arbre(Fils) = False then
+            Print_Arbre(Fils, Inconnu, 0);
             Remove_Parent(Fils, Pere);
+            Print_Arbre(Fils, Inconnu, 0);
          end if;
       else
-         Fils := Get_Noeud(Arbre, (Identifiant-1)/2);
+         Fils := Get_Noeud(Racine, (Identifiant-1)/2);
          if Est_Vide_Arbre(Fils) = False then
             Remove_Parent(Fils, Mere);
          end if;
       end if;
    end Delete;
 
-   -- Calcul du nombre d'ancêtres d'un individu
-   function Get_Nb_Ancetre (
-      Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant
-   ) return Natural is
-      Noeud_Source : T_Arbre_Genealogique;
+   -- Modification d'un sous arbre d'un noeud
+   procedure Set_Parent (
+      Arbre       : in out T_Arbre_Genealogique;
+      Parent : in T_Branche;
+      Valeur       : in out T_Arbre_Genealogique
+   ) is
    begin
-      Noeud_Source := Get_Noeud(Arbre, Identifiant);
-      return Get_Nb_Ancetre_Recursive(Noeud_Source);
-   end Get_Nb_Ancetre;
+      case Parent is
+         when Pere => Set_Noeud_Left(Arbre, Valeur);
+         when Mere => Set_Noeud_Right(Arbre, Valeur);
+         when others => null;
+      end case;
+   end Set_Parent;
+
+   procedure Set_Humain_Noeud (
+      Arbre : in out T_Arbre_Genealogique;
+      Humain : T_Humain
+   ) is
+      Individu : T_Individu;
+   begin
+      Individu := Get_Contenu(Arbre);
+      Put_Line(To_String_Individu(Individu));
+      Set_Humain(Individu, Humain);
+      Set_Contenu(Arbre, Individu);
+      Put_Line(To_String_Humain(Humain));
+      Put_Line(To_String_Individu(Individu));
+   end Set_Humain_Noeud;
+
+   procedure Remove_Parent (
+      Arbre       : in out T_Arbre_Genealogique;
+      Parent : in T_Branche
+   ) is
+   begin
+      Put_Line(Has_Right(Arbre)'Image);
+      case Parent is
+         when Pere => Remove_Left(Arbre);
+         when Mere => Remove_Right(Arbre);
+         when others => null;
+      end case;
+      Put_Line(Has_Right(Arbre)'Image);
+   end Remove_Parent;
+
+---------------------------------------------------- GET -----------------------------------------------------
 
    -- Calcul du nombre d'ancêtres d'un individu
-   function Get_Nb_Ancetre_Recursive (
+   function Get_Nb_Ancetre (
       Arbre       : in T_Arbre_Genealogique
    ) return Natural is
    begin
       if Est_Vide_Arbre(Arbre) then
          return 0;
       else
-         return 1 + Get_Nb_Ancetre_Recursive(Get_Parent(Arbre, Pere)) + Get_Nb_Ancetre_Recursive(Get_Parent(Arbre, Mere));
+         return 1 + Get_Nb_Ancetre(Get_Parent(Arbre, Pere)) + Get_Nb_Ancetre(Get_Parent(Arbre, Mere));
       end if;
-   end Get_Nb_Ancetre_Recursive;
-
-   -- Récupération des individus d'une génération donnée par rapport à un identifiant située dans un arbre
-   function Get_Gen (
-      Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant;
-      Equart_Gen   : in Integer
-   ) return T_Liste_Individu is
-      Noeud_Source : T_Arbre_Genealogique;
-      Resultat : T_Liste_Individu;
-   begin
-      Noeud_Source := Get_Noeud(Arbre, Identifiant);
-      Initialiser(Resultat);
-      Get_Gen_Recursive(Resultat, Noeud_Source, Equart_Gen);
-      return Resultat;
-   end Get_Gen;
+   end Get_Nb_Ancetre;
 
    -- Récupération des individus d'une génération donnée par rapport à un noeud donné
-   procedure Get_Gen_Recursive (
+   procedure Get_Gen (
       Resultat : in out T_Liste_Individu;
       Arbre       : in T_Arbre_Genealogique;
       Equart_Gen   : in Integer
@@ -156,10 +139,10 @@ package body Arbre_Genealogique is
          Ajouter(Resultat, Get_Contenu(Arbre));
          return;
       end if;
-      Get_Gen_Recursive(Resultat, Get_Parent(Arbre, Pere), Equart_Gen-1);
-      Get_Gen_Recursive(Resultat, Get_Parent(Arbre, Mere), Equart_Gen-1);
+      Get_Gen(Resultat, Get_Parent(Arbre, Pere), Equart_Gen-1);
+      Get_Gen(Resultat, Get_Parent(Arbre, Mere), Equart_Gen-1);
       return;
-   end Get_Gen_Recursive;
+   end Get_Gen;
 
    -- Récupération des individus selon un nombre de parents connus
    function Get_Groupe (
@@ -228,50 +211,11 @@ package body Arbre_Genealogique is
       
    end Get_Noeud;
 
+   -- Recupere un arbre vide (null)
    function Get_Arbre_Genealogique_Vide return T_Arbre_Genealogique is
    begin
       return Get_Arbre_Vide;
    end Get_Arbre_Genealogique_Vide;
-
-   -- Modification d'un sous arbre d'un noeud
-   procedure Set_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche;
-      Valeur       : in out T_Arbre_Genealogique
-   ) is
-   begin
-      case Parent is
-         when Pere => Set_Noeud_Left(Arbre, Valeur);
-         when Mere => Set_Noeud_Right(Arbre, Valeur);
-         when others => null;
-      end case;
-   end Set_Parent;
-
-   procedure Set_Humain_Noeud (
-      Arbre : in out T_Arbre_Genealogique;
-      Humain : T_Humain
-   ) is
-      Individu : T_Individu;
-   begin
-      Individu := Get_Contenu(Arbre);
-      Put_Line(To_String_Individu(Individu));
-      Set_Humain(Individu, Humain);
-      Set_Contenu(Arbre, Individu);
-      Put_Line(To_String_Humain(Humain));
-      Put_Line(To_String_Individu(Individu));
-   end Set_Humain_Noeud;
-
-   procedure Remove_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche
-   ) is
-   begin
-      case Parent is
-         when Pere => Remove_Left(Arbre);
-         when Mere => Remove_Right(Arbre);
-         when others => null;
-      end case;
-   end Remove_Parent;
 
    -- Récupération d'un des parent d'un noeud
    function Get_Parent (
@@ -329,6 +273,8 @@ package body Arbre_Genealogique is
       return Est_Vide_Arbre(Arbre);
    end Est_Vide_Arbre_Genealogique;
 
+--------------------------------------------- PRINT ------------------------------------------
+
    -- Verifie si un identifiant est présent dans l'arbre
    function Est_Identifiant_Dans_Arbre (
       Arbre       : in T_Arbre_Genealogique;
@@ -345,6 +291,32 @@ package body Arbre_Genealogique is
          Put_Line(To_String_Individu(Obtenir(Liste, I)));
       end loop;
    end Print_Liste_Individu;
+
+      -- Affichage de l'arbre généalogique
+   procedure Print_Arbre(
+      Arbre      : in T_Arbre_Genealogique;
+      Parent : in T_Branche;
+      Equart_Gen : in Natural
+   ) is
+   begin
+      if Est_Vide_Arbre(Arbre) = False then
+         Afficher_Noeud(Equart_Gen, Parent, Get_Contenu(Arbre));
+         Print_Arbre(Get_Parent(Arbre, Pere), Pere, Equart_Gen + 1);
+         Print_Arbre(Get_Parent(Arbre, Mere), Mere, Equart_Gen + 1);
+      end if;
+   end Print_Arbre;
+
+   -- Affiche N espaces, suivi de \"---\", le prénom, le nom et le sexe.
+   procedure Afficher_Noeud(N : Natural; Parent : T_Branche; Individu : T_Individu) is
+   begin
+      Put(Item => (1 .. N*12 => ' '));
+      Put("\--- ");
+      if (Parent /= Inconnu) then
+         Put(Parent'Image);
+         Put(" :");
+      end if;
+      Put_Line(To_String_Individu(Individu));
+   end Afficher_Noeud;
 
 
 end Arbre_Genealogique;

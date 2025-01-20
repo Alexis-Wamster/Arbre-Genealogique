@@ -1,0 +1,61 @@
+------------------------------------------------ INIT -------------------------------------------------
+
+R0 : Creer un noeud avec une valeur
+   R1: Affecter les pointeur droite et gauche avec une valeur null
+   R1: Affecter le contenu du noeud
+
+exemple:
+R0: procedure Init (Tree : out T_Arbre; Contenu : in T_Contenu)
+
+------------------------------------------------ SET -------------------------------------------------
+   
+R0: modifier le contenu du noeud (a droite ou a gauche)
+   R1.1: acceder au noeud
+   R1.2: Modifier une valeur par une autre
+      R2.1: Supprimer l'ancien noeud
+         R3: (TODO)
+      R2.2: Affecter la nouvelle valeur
+
+exemple:
+R0:   procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu)
+R0:   procedure Set_Right (Tree : T_Arbre; Contenu : in T_Contenu)
+R1.2: procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu)
+R1.2: procedure Set_Noeud_Left (Tree : T_Arbre; Noeud : in T_Arbre)
+R1.2: procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre)
+R2.1: procedure Remove_Left (Tree : T_Arbre)
+R2.1: procedure Remove_Right (Tree : T_Arbre)
+
+------------------------------------------------ GET -------------------------------------------------
+
+R0: Donner la valeur d'un noeud
+   R1: Acceder au noeud
+   R1: Acceder à la valeur du noeud
+   R1: Renvoyer la valeur
+   
+
+function Get_Left (Tree : in T_Arbre) return T_Arbre
+function Get_Right (Tree : in T_Arbre) return T_Arbre
+function Get_Contenu (Tree : in T_Arbre) return T_Contenu
+function Get_Arbre_Vide return T_Arbre;
+
+------------------------------------------------ BOOLEAN -------------------------------------------------
+
+R0: Verifier si un noeud pointe vers des noeuds existant
+   R1: Recuperer la valeur des pointeur
+   R1: Verifier si une valeur vaut null
+   R1: Renvoyer le resultat
+
+exemple:
+function Has_Right (Tree : in T_Arbre) return Boolean
+function Has_Left (Tree : in T_Arbre) return Boolean
+function Est_Vide_Arbre (Tree : in T_Arbre) return Boolean
+
+------------------------------------------------ TYPE -------------------------------------------------
+
+T_Arbre is access T_Noeud;
+
+T_Noeud is limited record
+   Left   : T_Arbre := null;
+   Right  : T_Arbre := null;
+   Contenu : T_Contenu;
+end record;
