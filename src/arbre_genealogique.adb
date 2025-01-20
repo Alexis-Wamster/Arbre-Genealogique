@@ -85,16 +85,13 @@ package body Arbre_Genealogique is
 
    procedure Set_Humain_Noeud (
       Arbre : in out T_Arbre_Genealogique;
-      Humain : T_Humain
+      Humain : in T_Humain
    ) is
       Individu : T_Individu;
    begin
       Individu := Get_Contenu(Arbre);
-      Put_Line(To_String_Individu(Individu));
       Set_Humain(Individu, Humain);
       Set_Contenu(Arbre, Individu);
-      Put_Line(To_String_Humain(Humain));
-      Put_Line(To_String_Individu(Individu));
    end Set_Humain_Noeud;
 
    procedure Remove_Parent (
@@ -307,7 +304,7 @@ package body Arbre_Genealogique is
    end Print_Arbre;
 
    -- Affiche N espaces, suivi de \"---\", le prénom, le nom et le sexe.
-   procedure Afficher_Noeud(N : Natural; Parent : T_Branche; Individu : T_Individu) is
+   procedure Afficher_Noeud(N : in Natural; Parent : in T_Branche; Individu : in T_Individu) is
    begin
       Put(Item => (1 .. N*12 => ' '));
       Put("\--- ");
