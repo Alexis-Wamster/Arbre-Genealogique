@@ -9,11 +9,13 @@ procedure Test_Arbre_Binaire is
 	use Arbre_Char;
 
     Arbre : Arbre_Char.T_Arbre;
+    Arbre2 : Arbre_Char.T_Arbre;
 
 begin
     Init (Arbre, 'f');
+    Init (Arbre2, 'a');
     Set_Left (Arbre, 'l');
-    Set_Right (Arbre, 'r');
+    Set_Noeud_Right (Arbre, Arbre2);
     pragma Assert (Get_Contenu(Get_Left(Arbre)) = 'l');
     pragma Assert (Get_Contenu(Get_Right(Arbre)) = 'r');
     Remove_Left (Arbre);

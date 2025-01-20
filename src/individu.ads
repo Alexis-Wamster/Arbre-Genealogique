@@ -1,3 +1,5 @@
+with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
+
 package Individu is
 
    -- Déclaration des types publique
@@ -65,6 +67,8 @@ package Individu is
    -- Renvoie le lieu de décès d'un humain
    function Get_Lieu_Mort (Humain : in T_Humain) return String;
 
+   function To_String_Humain(Humain : in T_Humain) return String;
+
 
    ---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
 
@@ -75,6 +79,8 @@ package Individu is
    -- Génère un identifiant pour une mère à partir d'une graine (l'identifiant du fils)
    function Creer_Identifiant_Mere (Id_Fils : Natural) return T_Identifiant with
    Pre => Id_Fils > 0;
+
+   function To_String_Identifiant(Identifiant : in T_Identifiant) return String;
 
    ---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
 
@@ -94,23 +100,33 @@ package Individu is
    -- Renvoie les caracteristiques humaines d'un individu
    function Get_Humain (Individu : in T_Individu) return T_Humain;
 
+   procedure Set_Humain(Individu : in out T_Individu; Humain : in T_Humain);
+
+   function To_String_Individu(Individu : in T_Individu) return String;
+
    ---------------------------------------------- OPERATION T_DATE -------------------------------------------
 
    -- Creer un objet de type date a partir de 3 entiers
    function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date with
    Pre =>
    (Mois = 2 AND 
-      (Jour <= 28 OR 
+      (Jour <= 28 OR
       (Jour <= 29 AND Annee mod 4 = 0 AND (Annee mod 100 /= 0 OR Annee mod 400 = 0)))
    ) OR
    ((Mois = 4 OR Mois = 6 OR Mois = 9 OR Mois = 11) AND Jour <= 30) OR
    ((Mois = 1 OR Mois = 3 OR Mois = 5 OR Mois = 7 OR Mois = 8 OR Mois = 10 OR Mois = 12) AND Jour <= 31);
 
    function To_String_Date(Date : in T_Date) return String;
-   
+
    function Creer_Date_Null return T_Date;
 
    function Is_Date_Null (Date : in T_Date) return Boolean;
+
+   function Create_Date_From_Text(Texte : String) return T_Date;
+
+   function Substring_To_Natural(Texte : String; Start_Index, End_Index : Positive) return Natural;
+
+   function Find(Texte : String; Char : Character) return Natural;
 
 
    ---------------------------------------------- DEFINITION TYPE -------------------------------------------
@@ -129,10 +145,10 @@ package Individu is
       Sexe           : T_Sexe := Inconnu;
       Date_Naissance : T_Date := Creer_Date(0, 1, 0);
       Date_Mort      : T_Date := Creer_Date(0, 1, 0);
-      Lieu_Naissance : String(1..100) := (others => ' ');
-      Lieu_Mort      : String(1..100) := (others => ' ');
-      Nom            : String(1..30) := (others => ' ');
-      Prenom         : String(1..30) := (others => ' ');
+      Lieu_Naissance : Unbounded_String := Null_Unbounded_String;
+      Lieu_Mort      : Unbounded_String := Null_Unbounded_String;
+      Nom            : Unbounded_String := Null_Unbounded_String;
+      Prenom         : Unbounded_String := Null_Unbounded_String;
    end record;
 
    -- Définition du type T_Individu

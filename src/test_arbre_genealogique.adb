@@ -20,5 +20,5 @@ begin
     Add_Pere(Arbre, Get_Identifiant_Noeud(Arbre), David);
     Add_Mere(Arbre, Get_Identifiant_Noeud(Arbre), Mere);
     Print_Arbre(Arbre, Get_Identifiant_Noeud(Arbre));
-    
+    Print_Arbre(Arbre,0);
 end Test_Arbre_Genealogique;

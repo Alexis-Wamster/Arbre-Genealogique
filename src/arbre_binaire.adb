@@ -50,6 +50,11 @@ package body Arbre_Binaire is
       Tree.Right := null;
    end Remove_Right;
 
+   procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu) is
+   begin
+      Tree.Contenu := Contenu;
+   end Set_Contenu;
+
    -- Fonction pour obtenir le noeud de gauche
    function Get_Left (Tree : in T_Arbre) return T_Arbre is
    begin
@@ -81,9 +86,9 @@ package body Arbre_Binaire is
    end Has_Left;
 
    -- Fonction qui verifie si l'arbre est vide (est null)
-   function Est_Vide (Tree : in T_Arbre) return Boolean is
+   function Est_Vide_Arbre (Tree : in T_Arbre) return Boolean is
    begin
       return Tree = null;
-   end Est_Vide;
+   end Est_Vide_Arbre;
 
 end Arbre_Binaire;

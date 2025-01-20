@@ -14,12 +14,12 @@ package Arbre_Genealogique is
 	use Liste_Individu;
 
    -- Types instanciés à partir des packages
-   subtype T_Arbre_Genealogique is Arbre_Binaire_Individu.T_Arbre;
    type T_Liste_Individu is new Liste_Individu.T_Liste with null record;
+   type T_Arbre_Genealogique is private;
 
    type T_Branche is (Pere, Mere, Inconnu);
-   --type T_Arbre_Genealogique is limited private;
-   --type T_Liste_Individu is limited private;
+
+   function Get_Arbre_Genealogique_Vide return T_Arbre_Genealogique;
 
 
    -- Création de l'arbre généalogique avec un humain initial
@@ -90,19 +90,41 @@ package Arbre_Genealogique is
       Arbre       : in T_Arbre_Genealogique
    ) return T_Humain;
 
+   -- Ecrase les ancienne données d'un humain par d'autre pour un noeud donnée
+   procedure Set_Humain_Noeud (
+      Arbre : in out T_Arbre_Genealogique;
+      Humain : T_Humain);
+
    -- Récupération de l'identifiant d'un noeud
    function Get_Identifiant_Noeud (
       Arbre       : in T_Arbre_Genealogique
    ) return T_Identifiant;
 
+   function Est_Vide_Arbre_Genealogique (
+      Arbre       : in T_Arbre_Genealogique
+   ) return Boolean;
+
+   procedure Print_Liste_Individu (Liste : in T_Liste_Individu);
+
+   function Est_Identifiant_Dans_Arbre (
+      Arbre       : in T_Arbre_Genealogique;
+      Identifiant : in T_Identifiant
+   ) return Boolean;
+
    private
+      type T_Arbre_Genealogique is new Arbre_Binaire_Individu.T_Arbre;
 
    procedure Print_Arbre_Recursif(
       Arbre      : in T_Arbre_Genealogique;
+      Parent : in T_Branche;
       Equart_Gen : in Natural
    );
 
-   procedure Afficher_Humain(N : Natural; Humain : T_Humain);
+   procedure Afficher_Noeud(
+      N : Natural;
+      Parent : T_Branche;
+      Individu : T_Individu
+   );
 
    procedure Set_Parent (
       Arbre       : in out T_Arbre_Genealogique;
