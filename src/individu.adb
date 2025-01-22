@@ -4,7 +4,7 @@ with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
 
 package body Individu is
 
-    ---------------------------------------------OPERATION STRING-------------------------------------------
+---------------------------------------------OPERATION STRING-------------------------------------------
 
     -- Fonction pour extraire une sous-chaîne en tant que Natural
    function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural is
@@ -29,7 +29,7 @@ package body Individu is
         return 0;
    end Find;
 
-    ---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
+---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
 
    -- Ajoute ou modifie l'attribut sexe d'un humain
    procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe) is
@@ -229,6 +229,22 @@ package body Individu is
         return To_String(To_Unbounded_String("[ " & Humain.Sexe'Image) & Nom_Complet & Section_Naissance & Section_Mort & To_Unbounded_String(" ]"));
     end To_String_Humain;
 
+    function Est_Egal_Humain(Humain1 : in T_Humain; Humain2 : in T_Humain) return Boolean is
+    begin
+        if
+            Humain1.Nom = Humain2.Nom AND
+            Humain1.Prenom = Humain2.Prenom AND
+            Humain1.Lieu_Naissance = Humain2.Lieu_Naissance AND
+            Humain1.Lieu_Mort = Humain2.Lieu_Mort AND
+            Humain1.Sexe = Humain2.Sexe AND
+            Est_Egal_Date(Humain1.Date_Naissance, Humain2.Date_Naissance) AND
+            Est_Egal_Date(Humain1.Date_Mort, Humain2.Date_Mort) then
+            return true;
+        else
+            return False;
+        end if;
+    end Est_Egal_Humain;
+
 
    ---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
 
@@ -301,7 +317,7 @@ package body Individu is
         return To_String_Identifiant(Get_Identifiant(Individu)) & " " & To_String_Humain(Get_Humain(Individu));
     end To_String_Individu;
 
-   ---------------------------------------------- OPERATION T_DATE -------------------------------------------
+---------------------------------------------- OPERATION T_DATE -------------------------------------------
 
    -- Creer un objet de type date a partir de 3 entiers
    function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date is
@@ -378,5 +394,16 @@ package body Individu is
      & Natural'Image(Date.Annee)(2 .. Natural'Image(Date.Annee)'Last);
     end if;
    end To_String_Date;
+
+   function Est_Egal_Date(Date1 : in T_Date; Date2 : in T_Date) return Boolean is
+    begin
+        if Date1.Jour <= 0 AND  Date2.Jour <= 0 then
+            return True;
+        end if;
+        if Date1.Jour = Date2.Jour AND Date1.Mois = Date2.Mois AND Date1.Annee = Date2.Annee then
+            return true;
+        end if;
+        return False;
+    end Est_Egal_Date;
 
 end Individu;

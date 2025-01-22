@@ -11,28 +11,35 @@ package Individu is
    subtype T_Identifiant is Natural;
    type T_Sexe is (Homme, Femme, Inconnu);
 
-   ---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
+---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
 
    -- Ajoute ou modifie l'attribut sexe d'un humain
-   procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe);
+   procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe) with
+      POST => Get_Sexe(Humain) = Sexe;
 
    -- Ajoute ou modifie le nom d'un humain
-   procedure Set_Nom(Humain : in out T_Humain; Nom : in String);
+   procedure Set_Nom(Humain : in out T_Humain; Nom : in String) with
+      POST => Get_Nom(Humain) = Nom;
 
    -- Ajoute ou modifie le prenom d'un humain
-   procedure Set_Prenom(Humain : in out T_Humain; Prenom : in String);
+   procedure Set_Prenom(Humain : in out T_Humain; Prenom : in String) with
+      POST => Get_Prenom(Humain) = Prenom;
 
    -- Ajoute ou modifie la date de naissance d'un humain
-   procedure Set_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date);
+   procedure Set_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date) with
+      POST => Get_Date_Naissance(Humain) = Date_Naissance;
 
    -- Ajoute ou modifie la date de décès d'un humain
-   procedure Set_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date);
+   procedure Set_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date) with
+      POST => Get_Date_Mort(Humain) = Date_Mort;
 
    -- Ajoute ou modifie le lieu de naissance d'un humain
-   procedure Set_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String);
+   procedure Set_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String) with
+      POST => Get_Lieu_Naissance(Humain) = Lieu_Naissance;
 
    -- Ajoute ou modifie le lieu de décès d'un humain
-   procedure Set_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String);
+   procedure Set_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String) with
+      POST => Get_Lieu_Mort(Humain) = Lieu_Mort;
 
    -- Creer un humain sans caracteristiques
    function creer_Humain_Vide return T_Humain;
@@ -67,35 +74,49 @@ package Individu is
    -- Renvoie le lieu de décès d'un humain
    function Get_Lieu_Mort (Humain : in T_Humain) return String;
 
+   -- Renvoie un Humain sous forme de chaine de caractere
    function To_String_Humain(Humain : in T_Humain) return String;
 
+   -- Verifie si deux humains sont identique
+   function Est_Egal_Humain(Humain1 : in T_Humain; Humain2 : in T_Humain) return Boolean;
 
-   ---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
+
+---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
 
    -- Génère un identifiant pour un père à partir d'une graine (l'identifiant du fils)
    function Creer_Identifiant_Pere (Id_Fils : Natural) return T_Identifiant with
-   Pre => Id_Fils > 0;
+   PRE => Id_Fils > 0,
+   POST => Creer_Identifiant_Pere'Result >= 2*Id_Fils;
 
    -- Génère un identifiant pour une mère à partir d'une graine (l'identifiant du fils)
    function Creer_Identifiant_Mere (Id_Fils : Natural) return T_Identifiant with
-   Pre => Id_Fils > 0;
+   PRE => Id_Fils > 0,
+   POST => Creer_Identifiant_Mere'Result >= 2*Id_Fils;
 
    -- Renvoie l'identifiant sous forme de String
    function To_String_Identifiant(Identifiant : in T_Identifiant) return String;
 
-   ---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
+---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
    
    -- Remplace l'humain qui se trouve dans l'objet Individu
-   procedure Set_Humain(Individu : in out T_Individu; Humain : in T_Humain);
+   procedure Set_Humain(Individu : in out T_Individu; Humain : in T_Humain) with
+   POST => Get_Humain(Individu) = Humain;
    
    -- Genere un individu à la racine (sans fils)
-   function creer_Individu_Source (Humain : in T_Humain) return T_Individu;
+   function creer_Individu_Source (Humain : in T_Humain) return T_Individu with
+   POST =>
+      Get_Identifiant(creer_Individu_Source'Result) = 1 AND
+      Get_Humain(creer_Individu_Source'Result) = Humain;
 
    -- Genere le pere de quelqu'un
-   function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+   function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu with
+      POST =>
+         Get_Humain(creer_Individu_Pere'Result) = Humain AND
+         Get_Identifiant(creer_Individu_Pere'Result) /= idFils;
 
    -- Genere la mere de quelqu'un
-   function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+   function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu with
+      POST => Get_Humain(creer_Individu_Mere'Result) = Humain;
 
    -- Renvoie l'identifiant d'un individu
    function Get_Identifiant (Individu : in T_Individu) return T_Identifiant;
@@ -106,7 +127,7 @@ package Individu is
    -- Renvoie un Individu sous forme de String
    function To_String_Individu(Individu : in T_Individu) return String;
 
-   ---------------------------------------------- OPERATION T_DATE -------------------------------------------
+---------------------------------------------- OPERATION T_DATE -------------------------------------------
 
    -- Creer un objet de type date a partir de 3 entiers
    function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date with
@@ -130,15 +151,20 @@ package Individu is
    -- Renvoie une date sous forme de String
    function To_String_Date(Date : in T_Date) return String;
 
+   -- Verifie si deux dates sont identique
+   function Est_Egal_Date(Date1 : in T_Date; Date2 : in T_Date) return Boolean;
+
    ---------------------------------------------- DEFINITION TYPE -------------------------------------------
 
    private
 
    -- Renvoie l'entier qui se trouve au milieu d'une chaine de caractere
-   function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural;
+   function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural with
+   PRE => Start_Index >= Texte'First AND End_Index <= Texte'Last;
 
    -- Retrouve la position d'un caractere dans une chaine de caractere
-   function Find(Texte : in String; Char : in Character) return Natural;
+   function Find(Texte : in String; Char : in Character) return Natural with
+   POST => Find'Result <= Texte'Last;
 
    -- Définition du type T_Date
    type T_Date is record
