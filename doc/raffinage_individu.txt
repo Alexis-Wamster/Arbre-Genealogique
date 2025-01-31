@@ -16,13 +16,11 @@ R0.3: Recuperer la valeur d'un attribut d'humain
 
 R0.4: Transformer un humain en chaine de caractere:
    R1: Transformer chaque caracteristiques en chaine de caractere
-      R2: Transformer une date en chaine de caractere
-         R3 : TODO
+      R2: Transformer une date en chaine de caractere (cf. R0.15)
       R2: Transformer un type enumerer en chaine de caractere
    R1: Ajouter a la chaine les attributs connus
       R2: Verifier si les attribut sont valide
-         R3: verifier si une date  est valide
-            TODO
+         R3: verifier si une date  est valide (cf. R0.14)
          R3: verifier si une chaine de caractere est vide
       R2: Strucurer les information de manière lisible
          R3 : Ajouter des mot clef tel que (Né le à | Décédé le à)

@@ -66,7 +66,7 @@ package Arbre_Genealogique is
 
    --- @brief Récupère les individus d'une génération donnée.
    --- @param Resultat Liste d'individus de la génération cible.
-   --- @param Arbre Arbre généalogique où chercher.
+   --- @param Arbre Arbre généalogique où chercher. un arbre null renvoie une liste vide.
    --- @param Equart_Gen Le nombre de générations de décalage.
    procedure Get_Gen (
       Resultat : in out T_Liste_Individu;
@@ -76,8 +76,10 @@ package Arbre_Genealogique is
    PRE => Equart_Gen >= 0;
 
 
-   -- Récupération des individus selon un nombre de parents connus
-   -- un arbre null renvoie une liste vide
+   --- @brief Récupère tous les individus de l'arbre qui ont un certain nombre de parents connus.
+   --- @param Resultat Liste d'individus qui ont n parent connus.
+   --- @param Arbre Arbre généalogique où chercher. un arbre null renvoie une liste vide.
+   --- @param Nb_Parent_Connu Le nombre de parents connus que doivent avoir les individus.
    procedure Get_Groupe (
       Resultat : in out T_Liste_Individu;
       Arbre          : in T_Arbre_Genealogique;
@@ -85,34 +87,42 @@ package Arbre_Genealogique is
    )with
    PRE => Nb_Parent_Connu >= 0 AND Nb_Parent_Connu <= 2;
 
-   -- Récupération d'un noeud par identifiant
-   -- un identifiant invalide ou un arbre null renvoie un arbre null
+   --- @brief Trouve un noeud  dans un arbre a partir de son identifiant.
+   --- @param Arbre Arbre généalogique où chercher.
+   --- @param Identifiant L'identifiant du noeud a chercher.
+   --- @return Le noeud avec l'identifiant correspondant ou un arbre null (en cas d'identifiant invalide ou d'arbre null).
    function Get_Noeud (
       Arbre       : in T_Arbre_Genealogique;
       Identifiant : in T_Identifiant
    ) return T_Arbre_Genealogique;
 
-   -- Récupération d'un des parent d'un noeud
-   -- un arbre null renvoie un arbre null
+   --- @brief Récupère le parent direct d'un noeud.
+   --- @param Arbre Arbre généalogique où chercher.
+   --- @param Parent Indique si c'est un père ou une mère
+   --- @return Le noeud parent ou un arbre null.
    function Get_Parent (
       Arbre       : in T_Arbre_Genealogique;
       Parent : in T_Branche
    ) return T_Arbre_Genealogique;
 
-   -- Récupération des caracteristiques humaines d'un noeud
+   --- @brief Récupère l'objet humain que contient un noeud.
+   --- @param Arbre Noeud qui contient l'humain.
+   --- @return L'objet humain du noeud.
    function Get_Humain_Noeud (
       Arbre       : in T_Arbre_Genealogique
    ) return T_Humain with
    PRE => Est_Vide_Arbre_Genealogique(Arbre) = False;
 
-   -- Récupération de l'identifiant d'un noeud
+   --- @brief Récupère l'identifiant d'un noeud
+   --- @param Arbre Noeud dont on veut l'identifiant.
+   --- @return L'identifiant du noeud.
    function Get_Identifiant_Noeud (
       Arbre       : in T_Arbre_Genealogique
    ) return T_Identifiant with
    PRE => Est_Vide_Arbre_Genealogique(Arbre) = False;
 
-   -- compte les parents direct d'un noeud
-   -- un arbre null renvoie un arbre null
+   --- @brief compte les parents direct d'un noeud
+   --- @param  un arbre null renvoie un arbre null
    function Get_Nb_Parent (
       Arbre       : in T_Arbre_Genealogique
    ) return Natural with
@@ -185,32 +195,43 @@ package Arbre_Genealogique is
       type T_Arbre_Genealogique is new Arbre_Binaire_Individu.T_Arbre;
       type T_Liste_Individu is new Liste_Individu.T_Liste with null record;
       type T_Liste_Branche is new Liste_Branche.T_Liste with null record;
+   
+      --- @brief Affiche un noeud avec un certain nombre d'espace devant
+      --- @param N Nombre de decalage vers la droite.
+      --- @param Parent Permet d'afficher si l'individu est un pere ou une mere (A default mettre Inconnu) 
+      --- @param Individu Individu a afficher.
+      procedure Afficher_Noeud(
+         N : in Natural;
+         Parent : in T_Branche;
+         Individu : in T_Individu
+      );
 
+      --- @brief Change un lien de parenté d'un noeud. (en supprimant l'ancienne arborescence)
+      --- @param Arbre Fils du noeud a modifier
+      --- @param Parent Indique si il faut modifier l'arborescence mère ou père
+      --- @param Valeur Nouvel Arbre qui prendras la place de l'ancien.
+      procedure Set_Parent (
+         Arbre       : in out T_Arbre_Genealogique;
+         Parent : in T_Branche;
+         Valeur       : in T_Arbre_Genealogique
+      ) with
+      PRE => Est_Vide_Arbre_Genealogique(Arbre) = False,
+      POST => Get_Parent(Arbre, Parent) = Valeur;
+
+      --- @brief Supprime le parent d'un noeud. (en supprimant l'ancienne arborescence)
+      --- @param Arbre Fils du noeud a modifier. un arbre null ne fait rien.
+      --- @param Parent Indique si il faut supprimer l'arborescence mère ou père
+      --- @param Valeur Nouvel Arbre qui prendras la place de l'ancien.
+      procedure Remove_Parent (
+         Arbre       : in out T_Arbre_Genealogique;
+         Parent : in T_Branche
+      ) with
+      POST => Get_Parent(Arbre, Parent) = Get_Arbre_Genealogique_Vide;
+
+      --- @brief Recupere la liste des branche par lequels passer pour passer d'un noeud a l'autre.
+      --- @param Arbre Noeud source.
+      --- @param Identifiant Identifiant du noeud destination
+      --- @param Parcours Liste qui se remplis automatiquement avec les valeurs (Pere et Mere). (Si l'identifiant n'est pas dans l'arbre, la liste seras vide)
       procedure Get_Parcours (Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant; Parcours : out T_Liste_Branche);
-
-   -- affiche un noeud avec un certain nombre d'espace devant
-   procedure Afficher_Noeud(
-      N : in Natural;
-      Parent : in T_Branche;
-      Individu : in T_Individu
-   );
-
-   -- Change un lien de parenté d'un noeud. (en supprimant l'ancienne arborescence)
-   procedure Set_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche;
-      Valeur       : in T_Arbre_Genealogique
-   ) with
-   PRE => Est_Vide_Arbre_Genealogique(Arbre) = False,
-   POST => Get_Parent(Arbre, Parent) = Valeur;
-
-   -- supprime un lien de parenté d'un noeud.
-   -- un arbre null ne fait rien
-   procedure Remove_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche
-   ) with
-   POST => Get_Parent(Arbre, Parent) = Get_Arbre_Genealogique_Vide;
-
 
 end Arbre_Genealogique;

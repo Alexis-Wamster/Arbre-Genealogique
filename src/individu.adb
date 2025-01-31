@@ -379,7 +379,15 @@ package body Individu is
     -- verifie si la date est valide ou non
     function Is_Date_Null (Date : in T_Date) return Boolean is
     begin
-        return Date.Jour <= 0;
+        if (Date.Jour < 1) then
+            return True;
+        elsif (Date.Mois = 2) then
+            return Date.Jour > 28 AND (Date.Jour > 29 OR Date.Annee mod 4 /= 0 OR (Date.Annee mod 100 = 0 AND Date.Annee mod 400 /= 0));
+        elsif (Date.Mois = 4 OR Date.Mois = 6 OR Date.Mois = 9 OR Date.Mois = 11) then
+            return Date.Jour > 30;
+        else
+            return Date.Jour > 31;
+        end if;
     end Is_Date_Null;
 
     -- renvoie une date sous forme de chaine de caractere "jour/mois/annee"

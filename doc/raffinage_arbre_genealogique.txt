@@ -85,13 +85,13 @@ R0.12 : recuperer la liste des individu separer de N generation d'un noeud
       R2.2 : Ajouter le contenu dans la liste (cf. raffinage liste)
    R1.3 : Renvoyer la liste
 
-R0.13 : recuperer la liste des individu qui ont n parents connu (TODO)
+R0.13 : recuperer la liste des individu qui ont n parents connu
    R1.1 : Parcourir l'abre en profondeur
       R2.1 Avec des appelle recursif sur les parents
    R1.2 : Compter le nombre de parents direct d'un noeud
       R2.1 : Verifier si les pointeur du noeud ne sont pas null
    R1.3 : Ajouter le contenu du noeud a la liste
-      R2.1 : sous traiter la récupération (cf. arbre_binaire.R0.5)
+      R2.1 : sous traiter la récupération du contenu du noeud (cf. arbre_binaire.R0.5)
 
 R0.14 : Recuperer un noeud a partir de son identifiant
    R1.1 : Trouver le chemin le plus court
