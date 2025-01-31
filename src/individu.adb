@@ -1,7 +1,7 @@
 with Ada.Text_IO;                 use Ada.Text_IO;
 with Ada.Integer_Text_IO;         use Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
-
+with System.Assertions;
 package body Individu is
 
 ---------------------------------------------OPERATION STRING-------------------------------------------
@@ -266,7 +266,7 @@ package body Individu is
         return Natural'Image(Identifiant);
     end To_String_Identifiant;
 
-   ---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
+---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
    
    -- Genere un individu à la racine (sans fils)
    function creer_Individu_Source (Humain : in T_Humain) return T_Individu is
@@ -361,10 +361,9 @@ package body Individu is
 
         -- Création et validation de la date
         return Creer_Date(Jour, Mois, Annee);
-        exception
-        when Constraint_Error =>
-            -- En cas d'erreur, retourner une date nulle
-            return Creer_Date_Null;
+        exception -- En cas d'erreur, retourner une date nulle
+        when Constraint_Error => return Creer_Date_Null;
+        when system.assertions.assert_failure => return Creer_Date_Null;
         end Create_Date_From_Text;
 
     -- creer une date null

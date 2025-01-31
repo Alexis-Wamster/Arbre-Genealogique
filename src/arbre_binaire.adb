@@ -1,5 +1,6 @@
 with Ada.Text_IO;                 use Ada.Text_IO;
 with Ada.Integer_Text_IO;         use Ada.Integer_Text_IO;
+with Ada.Unchecked_Deallocation;
 
 package body Arbre_Binaire is
 
@@ -11,29 +12,45 @@ package body Arbre_Binaire is
       Tree := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
    end Init;
 
+   procedure Free_Noeud is new Ada.Unchecked_Deallocation(Object => T_Noeud, Name => T_Arbre);
+
 ------------------------------------------------ SET -------------------------------------------------
 
    -- Procédure pour ajouter ou écraser un élément à gauche
    procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu) is
    begin
+      Free_Arbre(Tree.Left);
       Tree.Left := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
    end Set_Left;
 
    -- Procédure pour ajouter ou écraser un élément à droite
    procedure Set_Right (Tree : T_Arbre; Contenu : in T_Contenu) is
    begin
+      Free_Arbre(Tree.Right);
       Tree.Right := new T_Noeud'(Left => null, Right => null, Contenu => Contenu);
    end Set_Right;
+
+   -- supprime l'arborescence de l'arbre
+   procedure Free_Arbre(Tree : in out T_Arbre) is
+   begin
+      if (Tree /= Get_Arbre_Vide) then
+         Free_Arbre(Tree.Left);
+         Free_Arbre(Tree.Right);
+      end if;
+      Free_Noeud(Tree);
+   end Free_Arbre;
 
    -- Ajoute ou remplace le sous-arbre gauche avec un nouveau sous-arbre
    procedure Set_Noeud_Left (Tree : T_Arbre; Noeud : in T_Arbre) is
    begin
+      Free_Arbre(Tree.Left);
       Tree.Left := Noeud;
    end Set_Noeud_Left;
 
    -- Ajoute ou remplace le sous-arbre droit avec un nouveau sous-arbre
    procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre) is
    begin
+      Free_Arbre(Tree.Right);
       Tree.Right := Noeud;
    end Set_Noeud_Right;
 
@@ -46,12 +63,14 @@ package body Arbre_Binaire is
    -- Procédure pour supprimer le noeud de gauche
    procedure Remove_Left (Tree : T_Arbre) is
    begin
+      Free_Arbre(Tree.Left);
       Tree.Left := null;
    end Remove_Left;
 
    -- Procédure pour supprimer le noeud de droite
    procedure Remove_Right (Tree : T_Arbre) is
    begin
+      Free_Arbre(Tree.Right);
       Tree.Right := null;
    end Remove_Right;
 

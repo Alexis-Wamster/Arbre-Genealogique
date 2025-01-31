@@ -6,7 +6,7 @@ with Individu;       use Individu;
 
 procedure Main_Arbre_Genealogique is
 
-    -------------------------------------------------------------- UTILE ---------------------------------------------
+-------------------------------------------------------------- UTILE ---------------------------------------------
 
     -- Afficher les choix
     procedure Afficher_Actions is
@@ -100,7 +100,7 @@ procedure Main_Arbre_Genealogique is
     end Demmander_Identifiant;
 
 
-    --------------------------------------------------- OPERATION DE L'INTERFACE ---------------------------------------------
+--------------------------------------------------- OPERATION DE L'INTERFACE ---------------------------------------------
 
     -- supprime une personne et ses ancetres
     procedure Supprimer(Racine : in out T_Arbre_Genealogique; Noeud : in out T_Arbre_Genealogique) is
@@ -181,7 +181,7 @@ procedure Main_Arbre_Genealogique is
             exit when (Nb_Parent_Connu <= 2 AND Nb_Parent_Connu >= 0);
             Put("Veuillez saisir un nombre entre 0 et 2 : ");
         end loop;
-        Liste := Get_Groupe (Arbre, Nb_Parent_Connu);
+        Get_Groupe (Liste, Arbre, Nb_Parent_Connu);
         Put_Line("Voici ci-dessous, la liste des personnes correspondantes:");
         Print_Liste_Individu(Liste);
     end Ancetres_Parents_Connu;
@@ -193,8 +193,8 @@ procedure Main_Arbre_Genealogique is
         Put("Saisissez le nombre de generation separant l'individu de ses ancetres : ");
         loop
             Equart_Generation := String_To_Natural(Get_Line, 0);
-            exit when (Equart_Generation > 0);
-            Put_Line("Veuillez saisir un nombre superieur à 0 : ");
+            exit when (Equart_Generation >= 0);
+            Put_Line("Veuillez saisir un nombre positif : ");
         end loop;
         Get_Gen (Liste, Arbre, Equart_Generation);
         Put_Line("Voici ci-dessous, la liste des personnes correspondantes:");
@@ -202,7 +202,7 @@ procedure Main_Arbre_Genealogique is
     end Ancetres_Separes_Generation;
 
     
-    ------------------------------------------------------ Main -------------------------------------------------------------
+------------------------------------------------------ Main -------------------------------------------------------------
 
     -- Lis et execute l'action saisie par l'utilisateur
     function Lire_Action(Arbre : in out T_Arbre_Genealogique) return Boolean is
@@ -215,6 +215,7 @@ procedure Main_Arbre_Genealogique is
         if (Num_Action > Action_Max) then
             Put_Line("Saisie invalide ! veuillez saisir un chiffre enrtre 1 et" & Action_Max'Image);
         elsif (Num_Action = Action_Max) then
+            Free_Arbre_Genealogique(Arbre);
             return False;
         elsif (Num_Action = 1) then
             Put_Line("----------------------------------------");

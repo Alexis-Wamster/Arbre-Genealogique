@@ -1,54 +1,70 @@
 ------------------------------------------------ INIT -------------------------------------------------
 
-R0 : Creer un noeud avec une valeur
-   R1: Affecter les pointeur droite et gauche avec une valeur null
-   R1: Affecter le contenu du noeud
+R0.1 : Creer un noeud avec une valeur
+   R1.1: Supprimer les anciens pointeurs ils existent (cf. R0.3)
+   R1.2: Affecter les pointeur droite et gauche avec une valeur null
+   R1.3: Affecter le contenu du noeud
 
 exemple:
-R0: procedure Init (Tree : out T_Arbre; Contenu : in T_Contenu)
+R0.1: procedure Init (Tree : out T_Arbre; Contenu : in T_Contenu)
 
 ------------------------------------------------ SET -------------------------------------------------
    
-R0: modifier le contenu du noeud (a droite ou a gauche)
+R0.2: modifier le pointeur d'un noeud
    R1.1: acceder au noeud
-   R1.2: Modifier une valeur par une autre
-      R2.1: Supprimer l'ancien noeud
-         R3: (TODO)
-      R2.2: Affecter la nouvelle valeur
+   R1.2: Modifier un pointeur par un autre
+      R2.1: Supprimer l'ancien noeud pointeur (cf. R0.3)
+      R2.2: Affecter le nouveau pointeur
+
+R0.3: modifier la valeur d'un noeud
+   R1.1: acceder au noeud
+   R1.2: affecter la nouvelle valeur
+
+
+R0.4: Supprimer un Arbre
+   R1.1: Parcourrir recursivement en profondeur les pointeur droite et gauche
+   R1.2: Liberer chaque pointeurs
+      R2.1: Commencer par les plus profonds
+
 
 exemple:
-R0:   procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu)
-R0:   procedure Set_Right (Tree : T_Arbre; Contenu : in T_Contenu)
-R1.2: procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu)
-R1.2: procedure Set_Noeud_Left (Tree : T_Arbre; Noeud : in T_Arbre)
-R1.2: procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre)
-R2.1: procedure Remove_Left (Tree : T_Arbre)
-R2.1: procedure Remove_Right (Tree : T_Arbre)
+R0.3:   procedure Set_Left (Tree : T_Arbre; Contenu : in T_Contenu)
+R0.3:   procedure Set_Right (Tree : T_Arbre; Contenu : in T_Contenu)
+R0.3: procedure Set_Contenu (Tree : in out T_Arbre; Contenu : in T_Contenu)
+R0.2: procedure Set_Noeud_Left (Tree : T_Arbre; Noeud : in T_Arbre)
+R0.2: procedure Set_Noeud_Right (Tree : T_Arbre; Noeud : in T_Arbre)
+R0.2: procedure Remove_Left (Tree : T_Arbre)
+R0.2: procedure Remove_Right (Tree : T_Arbre)
 
 ------------------------------------------------ GET -------------------------------------------------
 
-R0: Donner la valeur d'un noeud
-   R1: Acceder au noeud
-   R1: Acceder à la valeur du noeud
-   R1: Renvoyer la valeur
-   
+R0.5: Donner la valeur d'un noeud
+   R1.1: Acceder au noeud
+   R1.2: Acceder a la valeur du noeud
+   R1.3: Renvoyer la valeur
 
-function Get_Left (Tree : in T_Arbre) return T_Arbre
-function Get_Right (Tree : in T_Arbre) return T_Arbre
-function Get_Contenu (Tree : in T_Arbre) return T_Contenu
-function Get_Arbre_Vide return T_Arbre;
+exemple
+R0.5: function Get_Left (Tree : in T_Arbre) return T_Arbre
+R0.5: function Get_Right (Tree : in T_Arbre) return T_Arbre
+R0.5: function Get_Contenu (Tree : in T_Arbre) return T_Contenu
+R0.5: function Get_Arbre_Vide return T_Arbre;
 
 ------------------------------------------------ BOOLEAN -------------------------------------------------
 
-R0: Verifier si un noeud pointe vers des noeuds existant
-   R1: Recuperer la valeur des pointeur
-   R1: Verifier si une valeur vaut null
-   R1: Renvoyer le resultat
+R0.6: Verifier si un noeud est vide
+   R1.1: Verifier si le noeud pointe vers null
+   R1.2: Renvoyer le resultat
+
+R0.7: Verifier si un noeud pointe vers des noeuds existant
+   R1.1: Verifier si un noeud est vide (cf. R0.6)
+   R1.2: Recuperer la valeur des pointeur
+   R1.3: Verifier si une valeur vaut null (cf. R0.6)
+   R1.4: Renvoyer le resultat
 
 exemple:
-function Has_Right (Tree : in T_Arbre) return Boolean
-function Has_Left (Tree : in T_Arbre) return Boolean
-function Est_Vide_Arbre (Tree : in T_Arbre) return Boolean
+R0.6: function Est_Vide_Arbre (Tree : in T_Arbre) return Boolean
+R0.7: function Has_Right (Tree : in T_Arbre) return Boolean
+R0.7: function Has_Left (Tree : in T_Arbre) return Boolean
 
 ------------------------------------------------ TYPE -------------------------------------------------
 

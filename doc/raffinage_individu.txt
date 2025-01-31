@@ -1,144 +1,164 @@
-with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
+---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
 
-package Individu is
+R0.1: creer un humain
+   R1: Creer un nouvelle objet T_Humain
+   R1: Affecter pour chaque attribut les valeurs passees en argument
+   R1: Mettre des valeurs par default sur les attribut dont il nous manque des informations
+   R1: Retourner l'humain creer
 
-   -- Déclaration des types publique
-   type T_Date is private;
-   type T_Humain is private;
-   type T_Individu is private;
+R0.2: Modifier un humain
+   R1: Acceder a l'attribut voulu
+   R1: Affecter la valeur à l'attribut
 
-   -- Déclaration des types privée
-   subtype T_Identifiant is Natural;
-   type T_Sexe is (Homme, Femme, Inconnu);
+R0.3: Recuperer la valeur d'un attribut d'humain
+   R1: Acceder a l'attribut voulu
+   R1: Retourner sa valeur
 
-   ---------------------------------------------- OPERATION T_HUMAIN -------------------------------------------
+R0.4: Transformer un humain en chaine de caractere:
+   R1: Transformer chaque caracteristiques en chaine de caractere
+      R2: Transformer une date en chaine de caractere
+         R3 : TODO
+      R2: Transformer un type enumerer en chaine de caractere
+   R1: Ajouter a la chaine les attributs connus
+      R2: Verifier si les attribut sont valide
+         R3: verifier si une date  est valide
+            TODO
+         R3: verifier si une chaine de caractere est vide
+      R2: Strucurer les information de manière lisible
+         R3 : Ajouter des mot clef tel que (Né le à | Décédé le à)
+   R1: Renvoyer le resultat
 
-   -- Ajoute ou modifie l'attribut sexe d'un humain
-   procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe);
+exemples:
+R0.2: procedure Set_Sexe(Humain : in out T_Humain; Sexe : in T_Sexe);
+R0.2: procedure Set_Nom(Humain : in out T_Humain; Nom : in String);
+R0.2: procedure Set_Prenom(Humain : in out T_Humain; Prenom : in String);
+R0.2: procedure Set_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date);
+R0.2: procedure Set_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date);
+R0.2: procedure Set_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String);
+R0.2: procedure Set_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String);
 
-   -- Ajoute ou modifie le nom d'un humain
-   procedure Set_Nom(Humain : in out T_Humain; Nom : in String);
+R0.1: function creer_Humain_Vide return T_Humain;
+R0.1: function creer_Humain_Default (Nom : in String; Prenom : in String; Sexe : in T_Sexe) return T_Humain;
+R0.1: function creer_Humain_Vivant (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String) return T_Humain;
+R0.1: function creer_Humain_Complet (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String; Date_Mort : in T_Date; Lieu_Mort : in String) return T_Humain;
 
-   -- Ajoute ou modifie le prenom d'un humain
-   procedure Set_Prenom(Humain : in out T_Humain; Prenom : in String);
+R0.3: function Get_Sexe (Humain : in T_Humain) return T_Sexe;
+R0.3: function Get_Nom (Humain : in T_Humain) return String;
+R0.3: function Get_Prenom (Humain : in T_Humain) return String;
+R0.3: function Get_Date_Naissance (Humain : in T_Humain) return T_Date;
+R0.3: function Get_Lieu_Naissance (Humain : in T_Humain) return String;
+R0.3: function Get_Date_Mort (Humain : in T_Humain) return T_Date;
+R0.3: function Get_Lieu_Mort (Humain : in T_Humain) return String;
 
-   -- Ajoute ou modifie la date de naissance d'un humain
-   procedure Set_Date_Naissance(Humain : in out T_Humain; Date_Naissance : in T_Date);
-
-   -- Ajoute ou modifie la date de décès d'un humain
-   procedure Set_Date_Mort(Humain : in out T_Humain; Date_Mort : in T_Date);
-
-   -- Ajoute ou modifie le lieu de naissance d'un humain
-   procedure Set_Lieu_Naissance(Humain : in out T_Humain; Lieu_Naissance : in String);
-
-   -- Ajoute ou modifie le lieu de décès d'un humain
-   procedure Set_Lieu_Mort(Humain : in out T_Humain; Lieu_Mort : in String);
-
-   -- Creer un humain sans caracteristiques
-   function creer_Humain_Vide return T_Humain;
-
-   -- Creer un humain avec les attributs nom, prénom, sexe
-   function creer_Humain_Default (Nom : in String; Prenom : in String; Sexe : in T_Sexe) return T_Humain;
-
-   -- Creer un humain avec toutes les caracteristiques sauf la date et lieu de décès
-   function creer_Humain_Vivant (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String) return T_Humain;
-
-   -- Creer un humain avec toutes les caracteristiques
-   function creer_Humain_Complet (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String; Date_Mort : in T_Date; Lieu_Mort : in String) return T_Humain;
-
-   -- Renvoie la valeur de l'attribut sexe d'un humain
-   function Get_Sexe (Humain : in T_Humain) return T_Sexe;
-
-   -- Renvoie le Nom d'un humain
-   function Get_Nom (Humain : in T_Humain) return String;
-
-   -- Renvoie le prénom d'un humain
-   function Get_Prenom (Humain : in T_Humain) return String;
-
-   -- Renvoie la date de naissance d'un humain
-   function Get_Date_Naissance (Humain : in T_Humain) return T_Date;
-
-   -- Renvoie le lieu de naissance d'un humain
-   function Get_Lieu_Naissance (Humain : in T_Humain) return String;
-
-   -- Renvoie la date de décès d'un humain
-   function Get_Date_Mort (Humain : in T_Humain) return T_Date;
-
-   -- Renvoie le lieu de décès d'un humain
-   function Get_Lieu_Mort (Humain : in T_Humain) return String;
-
-   function To_String_Humain(Humain : in T_Humain) return String;
+R0.4: function To_String_Humain(Humain : in T_Humain) return String;
 
 
-   ---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
+---------------------------------------------- OPERATION T_IDENTIFIANT -------------------------------------------
 
-   -- Génère un identifiant pour un père à partir d'une graine (l'identifiant du fils)
-   function Creer_Identifiant_Pere (Id_Fils : Natural) return T_Identifiant with
-   Pre => Id_Fils > 0;
+R0.5: creer un identifiant unique pour le parent d'un individu
+   R1: Creer l'identifiant
+      R2: Verifier si l'identifiant est pour un pere ou une mere
+      R2: (pour le pere :) multiplier l'identifiant du fils par 2
+      R2: (pour la mere :) multiplier l'identifiant du fils par 2 et ajouter 1
+   R1: Renvoyer le resultat
 
-   -- Génère un identifiant pour une mère à partir d'une graine (l'identifiant du fils)
-   function Creer_Identifiant_Mere (Id_Fils : Natural) return T_Identifiant with
-   Pre => Id_Fils > 0;
+R0.6: Convertir l'identifiant en chaine de caractere
+   R1: convertir l'identifiant
+      R2: Appeller la methode 'Image sur l'identifiant
+   R1: Renvoyer le resultat
 
-   -- Renvoie l'identifiant sous forme de String
-   function To_String_Identifiant(Identifiant : in T_Identifiant) return String;
+exemples:
+R0.5: function Creer_Identifiant_Pere (Id_Fils : Natural) return T_Identifiant
+R0.5: function Creer_Identifiant_Mere (Id_Fils : Natural) return T_Identifiant
+R0.6: function To_String_Identifiant(Identifiant : in T_Identifiant) return String;
 
-   ---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
-   
-   -- Remplace l'humain qui se trouve dans l'objet Individu
-   procedure Set_Humain(Individu : in out T_Individu; Humain : in T_Humain);
-   
-   -- Genere un individu à la racine (sans fils)
-   function creer_Individu_Source (Humain : in T_Humain) return T_Individu;
+---------------------------------------------- OPERATION T_INDIVIDU -------------------------------------------
 
-   -- Genere le pere de quelqu'un
-   function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+R0.7: Creer un individu avec identifiant
+   R1: Creer l'individu
+      R2: Creer un identifiant
+         R3: Verifier si l'individu est a la racine est un pere ou une mere
+         R3: Creer un identifiant (en consequence) (cf. raffinage "creer un identifiant")
+      R2: recuperer l'humaine de passe en argument
+      R2: Appeller le constructeur d'individu et lui fournir l'humain et l'identifiant
+   R1: Renvoyer l'individu
 
-   -- Genere la mere de quelqu'un
-   function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+R0.8: Modifier un individu
+   R1: Affecter la nouvelle valeur pour l'attribut humain
 
-   -- Renvoie l'identifiant d'un individu
-   function Get_Identifiant (Individu : in T_Individu) return T_Identifiant;
+R0.9: Recuperer la valeur d'un attribut d'individu
+   R1: Acceder a l'attribut voulu
+   R1: Retourner sa valeur
 
-   -- Renvoie les caracteristiques humaines d'un individu
-   function Get_Humain (Individu : in T_Individu) return T_Humain;
+R0.10: Convertir un individu en chaine de caractere
+   R1: Convertir chaque attribut
+      R2: Convertir l'attribut humain (cf. Raffinage "convertir un humain en string")
+      R2: Convertir l'attribut identifiant (cf. Raffinage "convertir un identifiant en string")
+   R1: Ajouter a la chaine les attributs
+   R1: Renvoyer le resultat
 
-   -- Renvoie un Individu sous forme de String
-   function To_String_Individu(Individu : in T_Individu) return String;
+exemples: 
+R0.7 : function creer_Individu_Source (Humain : in T_Humain) return T_Individu;
+R0.7 : function creer_Individu_Pere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+R0.7 : function creer_Individu_Mere (Humain : in T_Humain; idFils : in T_Identifiant) return T_Individu;
+R0.8 : procedure Set_Humain(Individu : in out T_Individu; Humain : in T_Humain);
+R0.9 : function Get_Identifiant (Individu : in T_Individu) return T_Identifiant;
+R0.9 : function Get_Humain (Individu : in T_Individu) return T_Humain;
+R0.10 : function To_String_Individu(Individu : in T_Individu) return String;
 
-   ---------------------------------------------- OPERATION T_DATE -------------------------------------------
+---------------------------------------------- OPERATION T_DATE -------------------------------------------
 
-   -- Creer un objet de type date a partir de 3 entiers
-   function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date with
-   Pre =>
-   (Mois = 2 AND 
-      (Jour <= 28 OR
-      (Jour <= 29 AND Annee mod 4 = 0 AND (Annee mod 100 /= 0 OR Annee mod 400 = 0)))
-   ) OR
-   ((Mois = 4 OR Mois = 6 OR Mois = 9 OR Mois = 11) AND Jour <= 30) OR
-   ((Mois = 1 OR Mois = 3 OR Mois = 5 OR Mois = 7 OR Mois = 8 OR Mois = 10 OR Mois = 12) AND Jour <= 31);
-   
-   -- Creer une date par default (invalide)
-   function Creer_Date_Null return T_Date;
+R0.11: Creer une date
+   R1 : appeller le constructeur de date et lui fournir jours, mois, annees dans les argument
+   R1: Renvoyer la date
 
-   -- Verifie si une date est valide
-   function Is_Date_Null (Date : in T_Date) return Boolean;
+R0.12: Creer une date inconnu sans valeur reel
+   R1 : appeller le constructeur de date et lui fournir des valleur null (0)
+   R1: Renvoyer la date
 
-   -- Creer une date a partir d'une chaine de caractere
-   function Create_Date_From_Text(Texte : String) return T_Date;
+R0.13: Creer une date a partir de texte
+   R1: Retrouver les 3 valeurs numerique de la date
+      R2.1: Trouver la position des '/' dans la chaine
+         R3: Parcourir les index de la chaine
+         R3: Recuperer chaque caractere et son index
+         R3: comparer un caractere avec la valeur chercher
+         R3: renvoyer l'index
+      R2.2: Calculer la position des 3 nombres (en fonction)
+      R2.3: Convertir les 3 morceaux de chaine en nombre
+         R3: Creer une nouvelle chaine correspondant au morceau de chaine
+         R3: Convertir une chaine en nombre
+   R1: Creer une date (cf. Raffinage "creer une date")
+   R1: Renvoyer la date
 
-   -- Renvoie une date sous forme de String
-   function To_String_Date(Date : in T_Date) return String;
+R0.14 : verifier si une date est valide
+   R1: Verifier la validiter d'un jours
+      R2 : Recuperer la valeur du jour
+      R2 : Verifier si une valeur est inferieur a 1
+      R2 : Verifier si une valeur est superieur a 31
+   R1 : Verifier la validite d'un mois
+      R2 : Recuperer la valeur du mois
+      R2 : Verifier si une valeur est inferieur a 1
+      R2 : Verifier si une valeur est superieur a 12
+   R1 : Renvoyer le resultat
 
-   ---------------------------------------------- DEFINITION TYPE -------------------------------------------
+R0.15 : Convertir une date en chaine de caractere
+   R1: Convertir chaque attribut de la date en chaine
+      R2: Acceder a chaque attribut (jour, mois, annee)
+      R2: utiliser la fonction 'Image sur les attributs
+      R2: Supprimer le caractere blanc (automatiquement mis devant)
+   R1: constituer la chaine avec les '/' et les nombres
+   R1: Renvoyer le resultat
 
-   private
+exemples:
+R0.11: function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date
+R0.12: function Creer_Date_Null return T_Date;
+R0.14: function Is_Date_Null (Date : in T_Date) return Boolean;
+R0.13: function Create_Date_From_Text(Texte : String) return T_Date;
+R0.15: function To_String_Date(Date : in T_Date) return String;
+R0.13_R2.3: function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural;
+R0.11_R2.1: function Find(Texte : in String; Char : in Character) return Natural;
 
-   -- Renvoie l'entier qui se trouve au milieu d'une chaine de caractere
-   function Substring_To_Natural(Texte : in String; Start_Index : in Natural; End_Index : in Natural) return Natural;
-
-   -- Retrouve la position d'un caractere dans une chaine de caractere
-   function Find(Texte : in String; Char : in Character) return Natural;
+----------------------------------------------  TYPE -------------------------------------------
 
    -- Définition du type T_Date
    type T_Date is record
@@ -163,6 +183,3 @@ package Individu is
       Identifiant : T_Identifiant;
       Humain      : T_Humain;
    end record;
-
-
-end Individu;

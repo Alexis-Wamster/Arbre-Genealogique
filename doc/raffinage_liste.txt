@@ -1,48 +1,63 @@
-
+------------------------------------------------ Modification -------------------------------------------------
 
 R0: initialiser une liste vide
    R1: Affecter 0 à la taille
-exemple:
-Initialiser(Liste : out T_Liste)
+
 
 R0: Ajouter un element
    R1: Augmenter la taille de 1
-   R1: Mettre l'element dans la liste à l'index correspondant à la taille
+   R1: Affecter la nouvelle valeur a l'index correspondant à la taille
+
+R0: Inserer un element a l'index voulu
+   R1: Augmenter la taille de 1
+   R1: decaler les element entre l'index et la fin
+   R1: Modifier l'element a l'index
+      R2: Affecter la nouvelle valeur a l'index
+
+R0: Supprimer le dernier element
+   R1: Reduire la taille de la liste
+
+R0: Concatener deux listes
+   R1: Augmenter la taille de la premiere liste
+      R2: Additioner l'ancienne taille de la première liste avec la taille de la deuxieme
+      R2: Affecter la nouvelle taille a la premiere liste
+   R1: Ajouter les element de la deuxieme liste a la suite de la premiere
+      R2: Parcourrir chaque index de la deuxieme liste
+      R2: Calculer l'index correspondant dans la premiere liste
+         R3: en additionnant l'index de l'element de la deuxieme liste et l'ancienne taille de la premiere liste
+      R2: Affecter l'element de la deuxieme liste à la premiere à l'index calculer
+
 exemple:
+Initialiser(Liste : out T_Liste)
 procedure Ajouter(Liste : in out T_Liste; Element : in T_Type)
-
-R0: Modifier un element
-   R1: Supprimer l'ancien element
-      TODO
-   R1: Affecter une nouvelle valeur a l'element
-exemple:
 procedure Modifier(Liste : in out T_Liste; Element : in T_Type; Index : in Natural)
+procedure Inserer(Liste : in out T_Liste; Element : in T_Type; Index : in Natural)
+procedure Supprimer(Liste : in out T_Liste; Index : in Natural)
+procedure Concatener(Liste1 : in out T_Liste; Liste2 : in T_Liste)
 
-   -- Insere un élément à la liste à l'index voulus (le reste est décalé a droite)
-   procedure Inserer(Liste : in out T_Liste; Element : in T_Type; Index : in Natural) with
-   Pre => Index <= Liste.Taille AND Liste.Taille < Capacite;
-
-   -- Supprimer le dernier élément de la liste
-   procedure Supprimer(Liste : in out T_Liste; Index : in Natural) with
-   Pre => Liste.Taille > 0;
+------------------------------------------------ Information -------------------------------------------------
 
 R0: Obtenir un element de la liste
    R1: Acceder a l'element
    R1: Renvoyer l'element
-function Obtenir(Liste : in T_Liste; Index : in Natural) return T_Type
 
-   -- Vérifier si la liste est pleine
-   function Est_Pleine(Liste : in T_Liste) return Boolean;
+R0: Obtenir la taille de la liste
+   R1: Acceder a la taille
+   R1: Renvoyer la
 
-   -- Vérifier si la liste est vide
-   function Est_Vide(Liste : in T_Liste) return Boolean;
+R0: Verifier si la liste est vide
+   R1: Comparer la taille de la liste à 0
+   R1: Renvoyer le resultat
 
-   -- Renvoie le nombre d'élements de la liste
-   function Taille(Liste : in T_Liste) return Natural;
+R0: Verifier si la liste est pleine
+   R1: Comparer la taille de la liste a la Capacite
+   R1: Renvoyer le resultat
 
-      -- ajoute les element de la liste2 à la fin de la liste 1
-   procedure Concatener(Liste1 : in out T_Liste; Liste2 : in T_Liste) with
-   Pre => (Liste1.Taille + Liste2.Taille) <= Capacite;
+exemple:
+function Obtenir(Liste : in T_Liste; Index : in Natural) return T_Type;
+function Est_Pleine(Liste : in T_Liste) return Boolean;
+function Est_Vide(Liste : in T_Liste) return Boolean;
+function Taille(Liste : in T_Liste) return Natural;
 
 
 ------------------------------------------------ TYPE -------------------------------------------------

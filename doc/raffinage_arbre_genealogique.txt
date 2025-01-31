@@ -1,126 +1,139 @@
 ------------------------------------------------------- SET ---------------------------------------------------
 
-   -- Création de l'arbre généalogique avec un humain initial
-   procedure Creer_Arbre (Arbre : in out T_Arbre_Genealogique; Humain : in T_Humain);
+R0.1 : Creer un noeud
+   R1.1 : Creer un Individu avec identifiant (cf. raffinage individu)
+   R1.1 : sous-traiter l'action creation (cf. arbre_binaire.R0.1)
 
-   -- Ajout d'un parent à un individu identifié
-   procedure Add_Parent (Fils       : in out T_Arbre_Genealogique; Humain      : in T_Humain; Branche : in T_Branche
-   );
+R0.2 ajouter/modifier un pointeur d'un noeud
+   R1.1 : Creer un noeud (cf.R0.1)
+   R1.2 : sous traiter l'affectation de valeur (cf. arbre_binaire.R0.2)
 
-   -- Suppression d'un individu et de son sous-arbre
-   procedure Delete (
-      Racine: in out T_Arbre_Genealogique;
-      Parent       : in out T_Arbre_Genealogique
-   );
+R0.3 : supprimer un noeud
+   R1.1 : trouver le fils du noeud a supprimer (cf R0.9)
+   R1.2 Supprimer le parent d'un noeud
+      R2.1 : sous-traiter l'action de suppression (cf. arbre_binaire.R0.4)
+   
+R0.4 : modifier l'humain d'un noeud
+   R1.1 : recuperer l'identifiant du noeud
+   R1.2 : modifier l'humain de l'objet individu (cf. raffinage individu)
+   R1.3 : Remettre l'individu dans le noeud
+      R2.1 : Sous traiter l'affectation (cf. arbre_binaire.R0.3)
 
-   -- Ecrase les ancienne données d'un humain par d'autre pour un noeud donnée
-   procedure Set_Humain_Noeud (
-      Arbre : in out T_Arbre_Genealogique;
-      Humain : T_Humain);
+R0.5 : modifier le pointeur d'un noeud
+   R1.1 sous traiter l'affectation (cf. arbre_binaire.R0.2)
+
+
+exemple:
+   R0.1 : procedure Creer_Arbre (Arbre : in out T_Arbre_Genealogique; Humain : in T_Humain);
+   R0.2 : procedure Add_Parent (Fils : in out T_Arbre_Genealogique; Humain : in T_Humain; Branche : in T_Branche);
+   R0.3 : procedure Delete (Racine: in out T_Arbre_Genealogique; Parent : in out T_Arbre_Genealogique);
+      R1.2 : procedure Remove_Parent (Arbre : in out T_Arbre_Genealogique; Parent : in T_Branche);
+   R0.4 : procedure Set_Humain_Noeud (Arbre : in out T_Arbre_Genealogique; Humain : T_Humain);
+   R0.5 : procedure Set_Parent (Arbre : in out T_Arbre_Genealogique; Parent : in T_Branche; Valeur : in out T_Arbre_Genealogique);  
 
    ------------------------------------------------------- GET ---------------------------------------------------
-   
-   -- Renvoie un arbre genealogique vide (null)
-   function Get_Arbre_Genealogique_Vide return T_Arbre_Genealogique;
 
-   -- Calcul du nombre d'ancêtres d'un individu
-   function Get_Nb_Ancetre (
-      Arbre       : in T_Arbre_Genealogique
-   ) return Natural;
+R0.6: Renvoyer la valeur d'un noeud
+   R1.2: sous traiter l'acces a la valeur du noeud (cf. arbre_binaire.R0.5)
+   R1.3: Renvoyer la valeur
 
-   -- Récupération des individus d'une génération donnée
-   procedure Get_Gen (
-      Resultat : in out T_Liste_Individu;
-      Arbre       : in T_Arbre_Genealogique;
-      Equart_Gen   : in Integer
-   ) ;
+R0.7: Acceder a l'identifiant d'un noeud
+   R1.1 recuperer l'individu du noeud (cf. R0.6)
+   R1.2 renvoyer la valeur
 
-   -- Récupération des individus selon un nombre de parents connus
-   function Get_Groupe (
-      Arbre          : in T_Arbre_Genealogique;
-      Nb_Parent_Connu  : in Natural
-   ) return T_Liste_Individu;
+R0.8: Acceder a l'humain d'un noeud
+   R1.1 recuperer l'individu du noeud (cf. R0.6)
+   R1.2 renvoyer la valeur
 
-   -- Récupération d'un noeud par identifiant
-   function Get_Noeud (
-      Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant
-   ) return T_Arbre_Genealogique;
+R0.9: Acceder au fils d'un noeud
+   R1.1 : Obtenir le noeud du fils
+      R2.1 : obtenir l'identifiant du fils
+         R2.1 : Obtenir l'identifiant du noeud actuel
+         R2.2 : Calculer l'identifiant du fils
+            R3.1 : diviser par deux l'identifiant du noeud actuel
+   R1.2 : Acceder au noeud du fils (cf. R0.14)
+   R1.3 : Renvoyer la valeur
 
-   -- Récupération d'un des parent d'un noeud
-   function Get_Parent (
-      Arbre       : in T_Arbre_Genealogique;
-      Parent : in T_Branche
-   ) return T_Arbre_Genealogique;
-
-   -- Récupération des caracteristiques humaines d'un noeud
-   function Get_Humain_Noeud (
-      Arbre       : in T_Arbre_Genealogique
-   ) return T_Humain;
-
-   -- Récupération de l'identifiant d'un noeud
-   function Get_Identifiant_Noeud (
-      Arbre       : in T_Arbre_Genealogique
-   ) return T_Identifiant;
-
---------------------------------------------------- AUTRES -----------------------------------------------
-
-   -- Verifie si l'arbre est vide (=null)
-   function Est_Vide_Arbre_Genealogique (
-      Arbre       : in T_Arbre_Genealogique
-   ) return Boolean;
-
-   -- Affichage de l'arbre généalogique
-   procedure Print_Arbre(
-      Arbre      : in T_Arbre_Genealogique;
-      Parent : in T_Branche;
-      Equart_Gen : in Natural
-   );
-
-   -- Affiche une liste d'individu
-   procedure Print_Liste_Individu (Liste : in T_Liste_Individu);
-
-   -- Verifie si un identifiant est present dans l'arbre
-   function Est_Identifiant_Dans_Arbre (
-      Arbre       : in T_Arbre_Genealogique;
-      Identifiant : in T_Identifiant
-   ) return Boolean;
-
---------------------------------------------------- PRIVATE -----------------------------------------------
-
-   private
-
-      package Arbre_Binaire_Individu is
-         new Arbre_Binaire (T_Contenu => T_Individu);
-      use Arbre_Binaire_Individu;
-
-      package Liste_Individu is
-         new Liste (T_Type => T_Individu, Capacite => 100);
-      use Liste_Individu;
-
-      type T_Arbre_Genealogique is new Arbre_Binaire_Individu.T_Arbre;
-      type T_Liste_Individu is new Liste_Individu.T_Liste with null record;
-
-   procedure Afficher_Noeud(
-      N : Natural;
-      Parent : T_Branche;
-      Individu : T_Individu
-   );
-
-   procedure Set_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche;
-      Valeur       : in out T_Arbre_Genealogique
-   );
-
-   procedure Remove_Parent (
-      Arbre       : in out T_Arbre_Genealogique;
-      Parent : in T_Branche
-   );
-
-   function Get_Nb_Parent (
-      Arbre       : in T_Arbre_Genealogique
-   ) return Natural;
+R0.10 Acceder au parent d'un noeud
+   R1.1 : Verifier si l'arbre est vide
+   R1.2 : Acceder au parent du noeud
+   R1.3 : Renvoyer l valeur
 
 
-end Arbre_Genealogique;
+exemple:
+R0.6: function Get_Arbre_Genealogique_Vide return T_Arbre_Genealogique; 
+R0.9: function Get_Fils(Noeud_Racine : in T_Arbre_Genealogique; Noeud_Parent: in T_Arbre_Genealogique; Noeud_Fils : out T_Arbre_Genealogique) return T_Branche;
+R0.10 function Get_Parent (Arbre : in T_Arbre_Genealogique; Parent : in T_Branche) return T_Arbre_Genealogique;
+R0.8: function Get_Humain_Noeud (Arbre : in T_Arbre_Genealogique) return T_Humain;  
+R0.7: function Get_Identifiant_Noeud (Arbre : in T_Arbre_Genealogique) return T_Identifiant;
+
+R0.11 : Obtenir le nombre d'ancetre connu d'un noeud
+   R1.1 : Ajouter 1 au resultat si necessaire
+      R2.1 : Verifier si l'arbre est null
+   R1.2 : Additionner le resultat final avec le nombre d'ancetre connu a droite et a gauche
+      R2.1 : Parcourir l'arbre en profondeur
+         R3.1 : Avec appelle récursif
+
+R0.12 : recuperer la liste des individu separer de N generation d'un noeud
+   R1.1 : verifier si l'equart de generation est correct
+      R2.1 : Parcourir l'arbre en profondeur jusqu'a la generation voulu
+         R3.1 : décrémenter le nombre de génération
+         R3.2 : Faire des appelle recursif sur les parents
+   R1.2 : Ajouter le contenu du noeud dans une liste
+      R2.1 : Recuperer le contenu du noeud
+         R3.1 : sous traiter la récupération (cf. arbre_binaire.R0.5)
+      R2.2 : Ajouter le contenu dans la liste (cf. raffinage liste)
+   R1.3 : Renvoyer la liste
+
+R0.13 : recuperer la liste des individu qui ont n parents connu (TODO)
+   R1.1 : Parcourir l'abre en profondeur
+      R2.1 Avec des appelle recursif sur les parents
+   R1.2 : Compter le nombre de parents direct d'un noeud
+      R2.1 : Verifier si les pointeur du noeud ne sont pas null
+   R1.3 : Ajouter le contenu du noeud a la liste
+      R2.1 : sous traiter la récupération (cf. arbre_binaire.R0.5)
+
+R0.14 : Recuperer un noeud a partir de son identifiant
+   R1.1 : Trouver le chemin le plus court
+      R2.2 : Remplir une liste qui contiendra le chemin
+         R3.1 : Regarder la parité de l'identifiant
+         R3.2 : Remplir la liste par une enumeration (mere ou pere)
+         R3.3 : Calculer succesivement l'identifiant du fils
+   R1.2 : Obtenir le Noeud a partir du parcours
+      R2.1 : Recuperer succesivement la branche du parcours
+      R2.1 : Recuperer successivement le bon parent
+   R1.3 : Renvoyer le noeud obtenu
+
+
+Exemple:
+R0.11 : function Get_Nb_Ancetre (Arbre : in T_Arbre_Genealogique) return Natural;  
+R0.12 : procedure Get_Gen (Resultat : in out T_Liste_Individu; Arbre : in T_Arbre_Genealogique; Equart_Gen : in Integer);  
+R0.13 : function Get_Groupe (Arbre : in T_Arbre_Genealogique; Nb_Parent_Connu : in Natural) return T_Liste_Individu;  
+R0.14 : function Get_Noeud (Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) return T_Arbre_Genealogique;
+R0.13_R1.2 : function Get_Nb_Parent (Arbre : in T_Arbre_Genealogique) return Natural; 
+
+
+R0.15 : Verifier si un arbre genealogique est vide
+   R1.1 : sous traiter l'action (cf. arbre_binaire.R0.6)
+
+R0.16 : Afficher l'arbre
+   R1.1 : Parcourir l'arbre en profondeur
+      R2.1 : Faire des appelle recursif sur les parent
+   R1.2 : Afficher le contenu d'un noeud
+      R2.1 : Afficher le lien de parenté d'un noeud avec son fils
+      R2.2 Afficher un individu (cf. raffinage individu)
+
+R1.17 : Verifier si un identifiant est dans l'arbre
+   R1.1 : Essayer de recuperer le noeud correspondant a l'identifiant (cf.R0.14)
+   R1.2 : Verifier si le noeud est null (cf. R0.15)
+
+R0.18 : Afficher une liste d'individu
+   R1.1 : Parcourir dans l'ordre la liste
+   R1.2 : Afficher un individu (cf. raffinage individu)
+
+
+R1.15 : function Est_Vide_Arbre_Genealogique (Arbre : in T_Arbre_Genealogique) return Boolean;  
+R1.16 : procedure Print_Arbre (Arbre : in T_Arbre_Genealogique; Parent : in T_Branche; Equart_Gen : in Natural);  
+R0.18 : procedure Print_Liste_Individu (Liste : in T_Liste_Individu);  
+R1.17 : function Est_Identifiant_Dans_Arbre (Arbre : in T_Arbre_Genealogique; Identifiant : in T_Identifiant) return Boolean;  
+R1.16_R1.2 : procedure Afficher_Noeud (N : Natural; Parent : T_Branche; Individu : T_Individu);    

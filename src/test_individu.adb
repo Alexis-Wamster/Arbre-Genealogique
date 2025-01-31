@@ -15,11 +15,11 @@ procedure Test_Individu is
 begin
     pragma Assert (True);
     Alexis := creer_Humain_Vide;
-    Ajouter_Sexe(Alexis, Homme);
-    Ajouter_Prenom(Alexis, "Alexis");
-    Ajouter_Nom(Alexis, "Wamster");
+    Set_Sexe(Alexis, Homme);
+    Set_Prenom(Alexis, "Alexis");
+    Set_Nom(Alexis, "Wamster");
     Date := Creer_Date(28,5,2004);
-    Ajouter_Date_Naissance(Alexis, Date);
+    Set_Date_Naissance(Alexis, Date);
 
     Noeud_Alexis := creer_Individu_Source(Alexis);
 

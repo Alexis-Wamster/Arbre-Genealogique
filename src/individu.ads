@@ -42,16 +42,48 @@ package Individu is
       POST => Get_Lieu_Mort(Humain) = Lieu_Mort;
 
    -- Creer un humain sans caracteristiques
-   function creer_Humain_Vide return T_Humain;
+   function creer_Humain_Vide return T_Humain with
+      POST =>
+         Get_Sexe(creer_Humain_Vide'Result) = Inconnu AND
+         Get_Nom(creer_Humain_Vide'Result) = "" AND
+         Get_Prenom(creer_Humain_Vide'Result) = "" AND
+         Get_Lieu_Mort(creer_Humain_Vide'Result) = "" AND
+         Get_Lieu_Naissance(creer_Humain_Vide'Result) = "" AND
+         Is_Date_Null(Get_Date_Mort(creer_Humain_Vide'Result)) AND
+         Is_Date_Null(Get_Date_Naissance(creer_Humain_Vide'Result));
 
    -- Creer un humain avec les attributs nom, prénom, sexe
-   function creer_Humain_Default (Nom : in String; Prenom : in String; Sexe : in T_Sexe) return T_Humain;
+   function creer_Humain_Default (Nom : in String; Prenom : in String; Sexe : in T_Sexe) return T_Humain with
+      POST =>
+         Get_Sexe(creer_Humain_Default'Result) = Sexe AND
+         Get_Nom(creer_Humain_Default'Result) = Nom AND
+         Get_Prenom(creer_Humain_Default'Result) = Prenom AND
+         Get_Lieu_Mort(creer_Humain_Default'Result) = "" AND
+         Get_Lieu_Naissance(creer_Humain_Default'Result) = "" AND
+         Is_Date_Null(Get_Date_Mort(creer_Humain_Default'Result)) AND
+         Is_Date_Null(Get_Date_Naissance(creer_Humain_Default'Result));
 
    -- Creer un humain avec toutes les caracteristiques sauf la date et lieu de décès
-   function creer_Humain_Vivant (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String) return T_Humain;
+   function creer_Humain_Vivant (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String) return T_Humain with 
+      POST =>
+         Get_Sexe(creer_Humain_Vivant'Result) = Sexe AND
+         Get_Nom(creer_Humain_Vivant'Result) = Nom AND
+         Get_Prenom(creer_Humain_Vivant'Result) = Prenom AND
+         Get_Lieu_Mort(creer_Humain_Vivant'Result) = "" AND
+         Get_Lieu_Naissance(creer_Humain_Vivant'Result) = Lieu_Naissance AND
+         Is_Date_Null(Get_Date_Mort(creer_Humain_Vivant'Result)) AND
+         Est_Egal_Date(Get_Date_Naissance(creer_Humain_Vivant'Result), Date_Naissance);
 
    -- Creer un humain avec toutes les caracteristiques
-   function creer_Humain_Complet (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String; Date_Mort : in T_Date; Lieu_Mort : in String) return T_Humain;
+   function creer_Humain_Complet (Nom : in String; Prenom : in String; Sexe : in T_Sexe; Date_Naissance : in T_Date; Lieu_Naissance : in String; Date_Mort : in T_Date; Lieu_Mort : in String) return T_Humain with
+   POST =>
+         Get_Sexe(creer_Humain_Complet'Result) = Sexe AND
+         Get_Nom(creer_Humain_Complet'Result) = Nom AND
+         Get_Prenom(creer_Humain_Complet'Result) = Prenom AND
+         Get_Lieu_Mort(creer_Humain_Complet'Result) = Lieu_Mort AND
+         Get_Lieu_Naissance(creer_Humain_Complet'Result) = Lieu_Naissance AND
+         Est_Egal_Date(Get_Date_Mort(creer_Humain_Complet'Result), Date_Mort) AND
+         Est_Egal_Date(Get_Date_Naissance(creer_Humain_Complet'Result), Date_Naissance);
 
    -- Renvoie la valeur de l'attribut sexe d'un humain
    function Get_Sexe (Humain : in T_Humain) return T_Sexe;
@@ -132,12 +164,13 @@ package Individu is
    -- Creer un objet de type date a partir de 3 entiers
    function Creer_Date (Jour : Natural; Mois : Natural; Annee : Natural) return T_Date with
    Pre =>
-   (Mois = 2 AND 
+   --Jour >= 1 AND
+   ((Mois = 2 AND 
       (Jour <= 28 OR
       (Jour <= 29 AND Annee mod 4 = 0 AND (Annee mod 100 /= 0 OR Annee mod 400 = 0)))
    ) OR
    ((Mois = 4 OR Mois = 6 OR Mois = 9 OR Mois = 11) AND Jour <= 30) OR
-   ((Mois = 1 OR Mois = 3 OR Mois = 5 OR Mois = 7 OR Mois = 8 OR Mois = 10 OR Mois = 12) AND Jour <= 31);
+   ((Mois = 1 OR Mois = 3 OR Mois = 5 OR Mois = 7 OR Mois = 8 OR Mois = 10 OR Mois = 12) AND Jour <= 31));
    
    -- Creer une date par default (invalide)
    function Creer_Date_Null return T_Date;
